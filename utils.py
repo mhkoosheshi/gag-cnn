@@ -1,6 +1,9 @@
 import cv2
 import matplotlib.pyplot as plt
 import numpy as np
+import rasterio.features
+from shapely.geometry import Polygon
+from tensorflow.python.ops.control_flow_ops import tuple_v2
 
 def draw_grasp(image_path: str, grasp_path:str, shape=(512,512)):
     x = cv2.imread(image_path)
@@ -69,6 +72,52 @@ def draw_grasp(image_path: str, grasp_path:str, shape=(512,512)):
     plt.imshow(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
     plt.show()
     plt.imshow(image)
+
+def rect2points(rectangle, shape=(512,512)):
+
+    [x, y, z, t, w] = rectangle
+
+    # now convert this to RANGE
+    # y_c = (((0.5*y)/512 -0.0442 - 0.125)/0.25)*shape[1]
+    # x_c = (((0.5*x)/512 - 0.125)/0.25)*shape[0]
+    x_c = x*shape[0]
+    y_c = y*shape[1]
+    t = np.deg2rad(90-t)
+    l = 15
+    # w = w/2
+
+    l = (l*shape[0]/512) *2
+    w = (w*shape[0]/512)
+
+    R1 = np.array([[np.cos(t),-np.sin(t)],[np.sin(t),np.cos(t)]])
+    R2 = np.array([[np.cos(t),np.sin(t)],[-np.sin(t),np.cos(t)]])
+    xp_c = (np.matmul(R1, np.array([[x_c],[y_c]])))[0][0]
+    yp_c = (np.matmul(R1, np.array([[x_c],[y_c]])))[1][0]
+
+    xp_1 = xp_c + l
+    yp_1 = yp_c - w
+    xp_2 = xp_1
+    yp_2 = yp_c + w
+    xp_3 = xp_c - l
+    yp_3 = yp_2
+    xp_4 = xp_3
+    yp_4 = yp_1
+
+    x1 = (np.matmul(R2, np.array([[xp_1],[yp_1]])))[0][0]
+    y1 = (np.matmul(R2, np.array([[xp_1],[yp_1]])))[1][0]
+    x2 = (np.matmul(R2, np.array([[xp_2],[yp_2]])))[0][0]
+    y2 = (np.matmul(R2, np.array([[xp_2],[yp_2]])))[1][0]
+    x3 = (np.matmul(R2, np.array([[xp_3],[yp_3]])))[0][0]
+    y3 = (np.matmul(R2, np.array([[xp_3],[yp_3]])))[1][0]
+    x4 = (np.matmul(R2, np.array([[xp_4],[yp_4]])))[0][0]
+    y4 = (np.matmul(R2, np.array([[xp_4],[yp_4]])))[1][0]
+
+    point1 = (x1,y1)
+    point2 = (x2,y2)
+    point3 = (x3,y3)
+    point4 = (x4,y4)
+
+    return point1, point2, point3, point4
 
 def points2rect(p1, p2, p3, p4, shape=(512,512)):
   
@@ -155,17 +204,24 @@ def camera_calibration(rectangle: list, shape=(512,512)):
 
     return rect
 
-def rect2maps(rectangle: list, shape=(512,512)):
-  '''
-  rectangle before camera calibration
-  Output: Q, z, sin*, cos*, w maps
-  '''
-
-  grasp = camera_calibration(rectangle)
+def rect2maps(grasp_path: str, shape=(512,512)):
+  
+  with open(grasp_path,"r") as f:
+        s = f.read()
+  grasp = [float(s.split(",")[i]) for i in range(0,len(s.split(",")))]
   [x_c, y_c, z_c, t, width] = grasp
-  
-  
-  
-  return None
+  grasp = camera_calibration(rectangle)
+
+  t = np.deg2rad(90-t)
+  l = 15
+  w = width/2
+  w=(w*(0.5/0.35)*105/100)/4
+  l=l*(0.5/0.35)*1.2
+  rectangle = [x_c, y_c, z_c, t, width]
+  point1, point2, point3, point4 = rect2points(rectangle, shape=shape)
+  poly = Polygon([point1, point2, point3, point4])
+  Q = rasterio.features.rasterize([poly], out_shape=shape)
+
+  return Q
 
 
