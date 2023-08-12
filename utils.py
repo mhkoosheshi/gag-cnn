@@ -223,8 +223,8 @@ def rect2maps(grasp_path: str, shape=(512,512)):
   poly = Polygon([point1, point2, point3, point4])
   Q = rasterio.features.rasterize([poly], out_shape=shape)
   W = ((width-25)/(105-25))*Q
-  s = (1+np.sin(t))/2
-  c = (1+np.cos(t))/2
+  s = np.sin(t*(np.pi)/180)
+  c = (1+np.cos(t*(np.pi)/180))/2
   Sin = (s)*Q
   Cos = (c)*Q
   Z = ((z_c-0.01)/(0.08-0.01))*Q
