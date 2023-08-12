@@ -214,12 +214,20 @@ def rect2maps(grasp_path: str, shape=(512,512)):
   [x_c, y_c, z_c, t, width] = grasp
   grasp = camera_calibration(grasp)
 
-  # t = np.deg2rad(90-t)
-  rectangle = [x_c, y_c, z_c, t, width]
+  if t<90:
+    t = t + 90
+  elif t>90:
+    t = t -270
+  rectangle = grasp
   point1, point2, point3, point4 = rect2points(rectangle, shape=shape)
   poly = Polygon([point1, point2, point3, point4])
   Q = rasterio.features.rasterize([poly], out_shape=shape)
   W = ((width-25)/(105-25))*Q
+  s = (1+np.sin(t))/2
+  c = (1+np.cos(t))/2
+  Sin = (s)*Q
+  Cos = (c)*Q
+  Z = ((z_c-0.01)/(0.08-0.01))*Q
 
   return Q, W
 
