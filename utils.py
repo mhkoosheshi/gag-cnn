@@ -229,6 +229,6 @@ def rect2maps(grasp_path: str, shape=(512,512)):
   Cos = (c)*Q
   Z = ((z_c-0.01)/(0.08-0.01))*Q
 
-  return Q, W
+  return Q, W, Sin, Cos, Z
 
 
