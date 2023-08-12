@@ -26,8 +26,8 @@ def draw_grasp(image_path: str, grasp_path:str, shape=(512,512)):
     t = np.deg2rad(90-t)
     l = 15
     w = width/2
-    w=(w*(0.5/0.35)*105/100)/4
-    l=l*(0.5/0.35)*1.2
+    w=(w*(0.5/0.35)*105/100)
+    l=l*(0.5/0.35)
 
 
     R1 = np.array([[np.cos(t),-np.sin(t)],[np.sin(t),np.cos(t)]])
