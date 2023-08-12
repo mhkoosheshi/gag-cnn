@@ -210,7 +210,7 @@ def rect2maps(grasp_path: str, shape=(512,512)):
         s = f.read()
   grasp = [float(s.split(",")[i]) for i in range(0,len(s.split(",")))]
   [x_c, y_c, z_c, t, width] = grasp
-  grasp = camera_calibration(rectangle)
+  grasp = camera_calibration(grasp)
 
   t = np.deg2rad(90-t)
   l = 15
