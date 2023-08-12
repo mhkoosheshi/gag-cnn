@@ -80,14 +80,16 @@ def rect2points(rectangle, shape=(512,512)):
     # now convert this to RANGE
     # y_c = (((0.5*y)/512 -0.0442 - 0.125)/0.25)*shape[1]
     # x_c = (((0.5*x)/512 - 0.125)/0.25)*shape[0]
-    x_c = x*shape[0]
-    y_c = y*shape[1]
+    x_c = x
+    y_c = y
     t = np.deg2rad(90-t)
     l = 15
     # w = w/2
 
-    l = (l*shape[0]/512) *2
-    w = (w*shape[0]/512)
+    l = 15
+    w = w/2*(shape[0]/512)
+    w=(w*(0.5/0.35)*105/100)/4
+    l=l*(0.5/0.35)*1.2
 
     R1 = np.array([[np.cos(t),-np.sin(t)],[np.sin(t),np.cos(t)]])
     R2 = np.array([[np.cos(t),np.sin(t)],[-np.sin(t),np.cos(t)]])
@@ -212,11 +214,7 @@ def rect2maps(grasp_path: str, shape=(512,512)):
   [x_c, y_c, z_c, t, width] = grasp
   grasp = camera_calibration(grasp)
 
-  t = np.deg2rad(90-t)
-  l = 15
-  w = width/2
-  w=(w*(0.5/0.35)*105/100)/4
-  l=l*(0.5/0.35)*1.2
+  # t = np.deg2rad(90-t)
   rectangle = [x_c, y_c, z_c, t, width]
   point1, point2, point3, point4 = rect2points(rectangle, shape=shape)
   poly = Polygon([point1, point2, point3, point4])
