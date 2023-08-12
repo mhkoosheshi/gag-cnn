@@ -1,1 +1,1 @@
-# GAppGrasp-CNN
+# Generative Approach Grasp CNN (GAG-CNN)
