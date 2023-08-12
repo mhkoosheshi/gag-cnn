@@ -214,10 +214,10 @@ def rect2maps(grasp_path: str, shape=(512,512)):
   [x_c, y_c, z_c, t, width] = grasp
   grasp = camera_calibration(grasp)
 
-  if t<90:
-    t = t + 90
-  elif t>90:
-    t = t -270
+  if t<0:
+    t = t + 270
+  elif t>0:
+    t = t - 90
   rectangle = grasp
   point1, point2, point3, point4 = rect2points(rectangle, shape=shape)
   poly = Polygon([point1, point2, point3, point4])
