@@ -15,8 +15,8 @@ class BaseConvDeconv():
     def get_model(self):
         input1 = Input(shape=self.shape)
         input2 = Input(shape=self.shape)
-        encoder1 = encoder(input1)
-        encoder2 = encoder(input2)
+        encoder1 = encoder(input1, name='conv1')
+        encoder2 = encoder(input2, name='conv2')
         
         cnct = layers.concatenate([encoder1, encoder2])
         
@@ -57,17 +57,17 @@ def Convlayer(input, outdim, is_batchnorm, name):
     x = Activation('relu', name=name + '_2_act')(x)
     return x
 
-def encoder(inputs):
-    conv1 = Convlayer(inputs, 32, is_batchnorm=True, name='conv1')
+def encoder(inputs, name):
+    conv1 = Convlayer(inputs, 32, is_batchnorm=True, name=name+'1')
     pool1 = MaxPool2D(pool_size=(2,2))(conv1)
-    conv2 = Convlayer(pool1, 64, is_batchnorm=True, name='conv2')
+    conv2 = Convlayer(pool1, 64, is_batchnorm=True, name=name+'2')
     pool2 = MaxPool2D(pool_size=(2,2))(conv2)
-    conv3 = Convlayer(pool2, 128, is_batchnorm=True, name='conv3')
+    conv3 = Convlayer(pool2, 128, is_batchnorm=True, name=name+'3')
     pool3 = MaxPool2D(pool_size=(2,2))(conv3)
-    conv4 = Convlayer(pool3, 256, is_batchnorm=True, name='conv4')
+    conv4 = Convlayer(pool3, 256, is_batchnorm=True, name=name+'4')
     pool4 = MaxPool2D(pool_size=(2,2))(conv4)
-    conv5 = Conv2D(512, (3, 3), activation='relu', padding='same')(pool4)
-    conv5 = Conv2D(512, (3, 3), activation='relu', padding='same')(conv5)
+    conv5 = Conv2D(512, (3, 3), activation='relu', padding='same', name=name+'5')(pool4)
+    conv5 = Conv2D(512, (3, 3), activation='relu', padding='same', name=name+'6')(conv5)
     outputs = conv5
 
     return outputs
