@@ -9,6 +9,7 @@ import random
 from tensorflow.keras.utils import Sequence
 from path_lists import train_path_lists, test_path_lists, unison_shuffle
 import albumentations as A
+from utils import rect2maps
 
 class DataGenerator(Sequence):
   '''
@@ -78,7 +79,11 @@ class DataGenerator(Sequence):
 
     rgbobj = []
     rgbiso = []
-    grsp = []
+    Qmaps = []
+    Wmaps = []
+    Sinmaps =[]
+    Cosmaps = []
+    Zmaps = []
 
     for i, (RGBobj_path, RGBiso_path, grasp_path) in enumerate(zip(batch_RGBobj, batch_RGBiso, batch_grasp)):
       
@@ -130,31 +135,24 @@ class DataGenerator(Sequence):
       # img = np.float32(img)
       rgbiso.append(img)
 
-      # grasp data
-      with open(grasp_path,"r") as f:
-        s = f.read()
-      grasp = [float(s.split(",")[i]) for i in range(0,len(s.split(",")))]
-      # grasp[0] = (grasp[0]-155)/(355-155)
-      # grasp[1] = (grasp[1]-185)/(410-185)
-      grasp[0] = (((0.5*grasp[0])/512 - 0.125)/0.25)
-      grasp[1] = (((0.5*grasp[1])/512 -0.0442 - 0.125)/0.25)
-      grasp[2] = (grasp[2]-0.01)/(0.08-0.01)
-      grasp[4] = (grasp[4]-25)/(105-25)
-      if grasp[3]<0:
-        grasp[3] = 270 + grasp[3]
-      elif grasp[3]>0:
-        grasp[3] = -90 + grasp[3]
-      grasp[3]=grasp[3]/180
-      
-      grsp.append(grasp)
-      
+      # translate grasp data into grasping maps
+      Q, W, Sin, Cos, Z = rect2maps(grasp_path)
+      Qmaps.append(Q)
+      Wmaps.append(W)
+      Sinmaps.append(Sin)
+      Cosmaps.append(Cos)
+      Zmaps.append(Z)
       # print(a)
 
     rgbobj = (np.array(rgbobj))/255
     rgbiso = (np.array(rgbiso))/255
-    grsp = np.array(grsp)
+    Qmaps = np.array(Qmaps)
+    Wmaps = np.array(Wmaps)
+    Sinmaps = np.array(Sinmaps)
+    Cosmaps = np.array(Cosmaps)
+    Zmaps = np.array(Zmaps)
 
-    return [rgbobj, rgbiso], [grsp]
+    return [rgbobj, rgbiso], [Qmaps, Wmaps, Sinmaps, Cosmaps]
 
 def get_loader(batch_size=8,
               mode='rgb',

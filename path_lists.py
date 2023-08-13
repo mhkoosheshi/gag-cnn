@@ -23,7 +23,7 @@ def train_path_lists(mode='rgb'):
   
   if 'd' in mode:
     for d_path in glob.glob(f"/content/drive/MyDrive/gag-cnn/vs10/d*.png"):
-        d_iso.append(d_path)
+      d_iso.append(d_path)
     for d_path in glob.glob(f"/content/drive/MyDrive/gag-cnn/obj/d*.png"):
       d_obj.append(d_path)
 
