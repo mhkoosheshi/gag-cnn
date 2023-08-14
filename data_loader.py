@@ -24,7 +24,8 @@ class DataGenerator(Sequence):
               batch_size=8,
               shape=(224,224),
               shuffle=True,
-              aug_p=0.7
+              aug_p=0.7,
+              stack=False
               ):
 
     self.RGBobj_paths = RGBobj_paths
@@ -35,6 +36,7 @@ class DataGenerator(Sequence):
     self.shuffle = shuffle
     self.aug_p = aug_p
     self.on_epoch_end()
+    self.stack = stack
 
     self.color_transform = A.Compose([
     # A.ChannelShuffle(p=0.5),
@@ -152,7 +154,12 @@ class DataGenerator(Sequence):
     Cosmaps = np.array(Cosmaps)
     Zmaps = np.array(Zmaps)
 
-    return [rgbobj, rgbiso], [Qmaps, Wmaps, Sinmaps, Cosmaps]
+    if self.stack:
+      outputs = np.stack([Qmaps, Wmaps, Sinmaps, Cosmaps])
+      return [rgbobj, rgbiso], [outputs]
+    
+    if not self.stack:
+      return [rgbobj, rgbiso], [Qmaps, Wmaps, Sinmaps, Cosmaps]
 
 def get_loader(batch_size=8,
               mode='rgb',
@@ -160,7 +167,8 @@ def get_loader(batch_size=8,
               shuffle=True,
               factor=0.15,
               aug=False,
-              aug_p=0):
+              aug_p=0,
+              stack=False):
     # currently only for rgb
     RGBobj_paths, RGBiso_paths, grasp_paths = train_path_lists(mode=mode)
     n = len(RGBobj_paths)
@@ -182,7 +190,8 @@ def get_loader(batch_size=8,
                                 batch_size=batch_size,
                                 shape=shape,
                                 shuffle=shuffle,
-                                aug_p=aug_p
+                                aug_p=aug_p,
+                                stack=stack
                                 )
     val_gen = DataGenerator(RGBobj_val,
                             RGBiso_val, 
@@ -190,7 +199,8 @@ def get_loader(batch_size=8,
                             batch_size=batch_size,
                             shape=shape,
                             shuffle=shuffle,
-                            aug_p=0
+                            aug_p=0,
+                            stack=stack
                             )
 
     # test_gen = DataGenerator(RGB1_test,
