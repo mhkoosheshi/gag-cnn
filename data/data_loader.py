@@ -7,9 +7,9 @@ from sklearn.model_selection import train_test_split
 import albumentations as A
 import random
 from tensorflow.keras.utils import Sequence
-from path_lists import train_path_lists, test_path_lists, unison_shuffle
+from data.path_lists import train_path_lists, test_path_lists, unison_shuffle
 import albumentations as A
-from utils import rect2maps
+from utils.utils import rect2maps
 
 class DataGenerator(Sequence):
   '''
