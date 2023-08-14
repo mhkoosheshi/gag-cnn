@@ -28,7 +28,6 @@ class DataGenerator(Sequence):
               geo_p=0.5,
               color_p=0.5,
               noise_p=0.5,
-              others_p=0.5,
               iso_p=0.5,
               stack=False,
               ):
@@ -44,8 +43,7 @@ class DataGenerator(Sequence):
     self.stack = stack
 
     self.geo = A.Compose([
-
-
+      A.HorizontalFlip(p=0.5)
     ], p=geo_p)
     
     self.noise = A.Compose([
@@ -53,7 +51,7 @@ class DataGenerator(Sequence):
       A.MultiplicativeNoise(p=0.5),
     ], p=noise_p)
 
-    self.others = A.Compose([
+    self.color = A.Compose([
       A.RandomBrightness(p=0.5),
       A.FancyPCA(p=0.3),
       A.RandomShadow(p=0.2, shadow_roi=(0, 0.7, 1, 1), num_shadows_lower=1, num_shadows_upper=2, shadow_dimension=4),
@@ -61,15 +59,13 @@ class DataGenerator(Sequence):
       A.Solarize(threshold=50, p=0.5),
       A.PixelDropout(drop_value=0, dropout_prob=0.02, p=0.5),
       A.HueSaturationValue(hue_shift_limit=20, sat_shift_limit=30, val_shift_limit=50, p=0.7)
-    ], p=others_p) 
-
-    self.color = A.Compose([
-    A.ISONoise(p=iso_p, color_shift=(0.01, 0.05), intensity=(0.2, 0.5)),
-    self.others,
-    self.noise
-    ], p=color_p)
+    ], p=color_p) 
 
     self.transform = A.Compose([
+    A.ISONoise(p=iso_p, color_shift=(0.01, 0.05), intensity=(0.2, 0.5)),
+    self.noise,
+    self.color,
+    self.geo
     ], p=aug_p)
 
   def on_epoch_end(self):
@@ -113,7 +109,7 @@ class DataGenerator(Sequence):
         img = (rnd)*(255 - img) + (1-rnd)*img
         a = int(100*(random.random()))
         random.seed(a)
-        transformed = self.color_transform(image=img)['image']
+        transformed = self.transform(image=img)['image']
         img = transformed
 
       if self.aug_p !=0:
@@ -137,7 +133,7 @@ class DataGenerator(Sequence):
         rnd = rnd - 1
         img = (rnd)*(255 - img) + (1-rnd)*img
         random.seed(a)
-        transformed = self.color_transform(image=img)['image']
+        transformed = self.transform(image=img)['image']
         img = transformed
 
       if self.aug_p !=0:
