@@ -109,16 +109,25 @@ class DataGenerator(Sequence):
         img = (rnd)*(255 - img) + (1-rnd)*img
         a = int(100*(random.random()))
         random.seed(a)
-        transformed = self.transform(image=img)['image']
-        img = transformed
-
-      if self.aug_p !=0:
+        Q, W, Sin, Cos, Z = rect2maps(grasp_path)
+        transformed = self.transform(image=img, masks=[Q, W, Sin, Cos, Z])
+        Q = transformed['masks'][0]
+        W = transformed['masks'][1]
+        Sin = transformed['masks'][2]
+        Cos = transformed['masks'][3]
+        Z = transformed['masks'][4]
+        img = transformed['image']
         rnd = random.randint(1,2)
         rnd = rnd - 1
         img = (rnd)*(255 - img) + (1-rnd)*img
 
       # img = np.float32(img)
       rgbobj.append(img)
+      Qmaps.append(Q)
+      Wmaps.append(W)
+      Sinmaps.append(Sin)
+      Cosmaps.append(Cos)
+      Zmaps.append(Z)
 
 
       # RGB2 data
@@ -135,22 +144,12 @@ class DataGenerator(Sequence):
         random.seed(a)
         transformed = self.transform(image=img)['image']
         img = transformed
-
-      if self.aug_p !=0:
         rnd = random.randint(1,2)
         rnd = rnd - 1
         img = (rnd)*(255 - img) + (1-rnd)*img
 
       # img = np.float32(img)
       rgbiso.append(img)
-
-      # translate grasp data into grasping maps
-      Q, W, Sin, Cos, Z = rect2maps(grasp_path)
-      Qmaps.append(Q)
-      Wmaps.append(W)
-      Sinmaps.append(Sin)
-      Cosmaps.append(Cos)
-      Zmaps.append(Z)
       # print(a)
 
     rgbobj = (np.array(rgbobj))/255
