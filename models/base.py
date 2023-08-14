@@ -9,6 +9,10 @@ from keras.layers import Lambda
 from tensorflow.keras.models import Model
 
 class BaseConvDeconv():
+    '''
+    Works on stack True
+    '''
+    
     def __init__(self, shape):
         self.shape=shape
     
@@ -38,7 +42,7 @@ class BaseConvDeconv():
         conv6 = Conv2D(4, (1, 1), activation='linear', padding='same', name='upconv5_3')(conv4)
         
 
-        based_model = Model(inputs=[input1, input2], outputs=[conv6[:,:,:,0], conv6[:,:,:,1], conv6[:,:,:,2], conv6[:,:,:,3]])
+        based_model = Model(inputs=[input1, input2], outputs=[conv6])
 
         return based_model
 
