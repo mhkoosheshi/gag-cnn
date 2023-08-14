@@ -25,7 +25,12 @@ class DataGenerator(Sequence):
               shape=(224,224),
               shuffle=True,
               aug_p=0.7,
-              stack=False
+              geo_p=0.5,
+              color_p=0.5,
+              noise_p=0.5,
+              others_p=0.5,
+              iso_p=0.5,
+              stack=False,
               ):
 
     self.RGBobj_paths = RGBobj_paths
@@ -38,28 +43,34 @@ class DataGenerator(Sequence):
     self.on_epoch_end()
     self.stack = stack
 
-    self.color_transform = A.Compose([
-    # A.ChannelShuffle(p=0.5),
-    A.CLAHE(p=0),
-    # A.ColorJitter(p=1),
-    A.Emboss(p=0),
-    # A.Equalize(mode='cv', by_channels=True, p=1),
-    A.FancyPCA(p=0.7),
-    A.GaussNoise(p=0.5),
-    A.ISONoise(p=0.9, color_shift=(0.01, 0.05), intensity=(0.3, 0.6)),
-    A.MultiplicativeNoise(p=0.5),
-    A.HueSaturationValue(hue_shift_limit=20, sat_shift_limit=30, val_shift_limit=50, p=0.7),
-    # A.RGBShift(p=1),
-    # A.ToGray(p=1),
-    A.RandomBrightnessContrast(p=0.7),
-    A.RandomBrightness(p=0.5),
-    A.Solarize(threshold=50, p=0.7),
-    A.PixelDropout(drop_value=0, dropout_prob=0.02, p=0.8),
-    A.RandomGamma(p=0.3),
-    A.RandomShadow(p=0.5, shadow_roi=(0, 0.7, 1, 1), num_shadows_lower=1, num_shadows_upper=2, shadow_dimension=4),
-    A.RandomToneCurve(p=0.7),
-    # A.RandomSunFlare(src_color=(255, 255, 255), p=1),
-], p=aug_p)
+    self.geo = A.Compose([
+
+
+    ], p=geo_p)
+    
+    self.noise = A.Compose([
+      A.GaussNoise(p=0.5),
+      A.MultiplicativeNoise(p=0.5),
+    ], p=noise_p)
+
+    self.others = A.Compose([
+      A.RandomBrightness(p=0.5),
+      A.FancyPCA(p=0.3),
+      A.RandomShadow(p=0.2, shadow_roi=(0, 0.7, 1, 1), num_shadows_lower=1, num_shadows_upper=2, shadow_dimension=4),
+      A.RandomToneCurve(p=0.3),
+      A.Solarize(threshold=50, p=0.5),
+      A.PixelDropout(drop_value=0, dropout_prob=0.02, p=0.5),
+      A.HueSaturationValue(hue_shift_limit=20, sat_shift_limit=30, val_shift_limit=50, p=0.7)
+    ], p=others_p) 
+
+    self.color = A.Compose([
+    A.ISONoise(p=iso_p, color_shift=(0.01, 0.05), intensity=(0.2, 0.5)),
+    self.others,
+    self.noise
+    ], p=color_p)
+
+    self.transform = A.Compose([
+    ], p=aug_p)
 
   def on_epoch_end(self):
     if self.shuffle:
