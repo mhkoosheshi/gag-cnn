@@ -155,7 +155,7 @@ class DataGenerator(Sequence):
     Zmaps = np.array(Zmaps)
 
     if self.stack:
-      outputs = np.stack([Qmaps, Wmaps, Sinmaps, Cosmaps])
+      outputs = np.stack([Qmaps, Wmaps, Sinmaps, Cosmaps], axis=-1)
       return [rgbobj, rgbiso], [outputs]
     
     if not self.stack:
