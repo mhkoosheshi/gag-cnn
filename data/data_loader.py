@@ -174,6 +174,10 @@ def get_loader(batch_size=8,
               factor=0.15,
               aug=False,
               aug_p=0,
+              geo_p=0.5,
+              color_p=0.5,
+              noise_p=0.5,
+              iso_p=0.5,
               stack=False):
     # currently only for rgb
     RGBobj_paths, RGBiso_paths, grasp_paths = train_path_lists(mode=mode)
@@ -197,6 +201,10 @@ def get_loader(batch_size=8,
                                 shape=shape,
                                 shuffle=shuffle,
                                 aug_p=aug_p,
+                                geo_p=0.5,
+                                color_p=0.5,
+                                noise_p=0.5,
+                                iso_p=0.5,
                                 stack=stack
                                 )
     val_gen = DataGenerator(RGBobj_val,
@@ -206,6 +214,10 @@ def get_loader(batch_size=8,
                             shape=shape,
                             shuffle=shuffle,
                             aug_p=0,
+                            geo_p=0.5,
+                            color_p=0.5,
+                            noise_p=0.5,
+                            iso_p=0.5,
                             stack=stack
                             )
 
