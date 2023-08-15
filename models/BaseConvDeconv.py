@@ -39,7 +39,7 @@ class BaseConvDeconv():
         up4 = Conv2DTranspose(32, (2, 2), strides=(2, 2), padding='same', name='tconv4_1')(conv3)
         conv4 = Conv2D(32, (3, 3), activation='linear', padding='same', name='upconv4_1')(up4)
         conv4 = Conv2D(32, (3, 3), activation='linear', padding='same', name='upconv4_2')(conv4)
-        conv6 = Conv2D(4, (1, 1), activation='linear', padding='same', name='upconv5_3')(conv4)
+        conv6 = Conv2D(4, (1, 1), activation='relu', padding='same', name='upconv5_3')(conv4)
         
 
         based_model = Model(inputs=[input1, input2], outputs=[conv6])
