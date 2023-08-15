@@ -49,7 +49,7 @@ def train(batch_size=8,
           
           if resume:
               model = load_model(checkpoint_path, 
-              custom_objects={"jaccard_loss":loss})
+              custom_objects={loss_name:loss})
           checkpoint = tf.keras.callbacks.ModelCheckpoint(filepath=checkpoint_path,
                                                           save_weights_only=False,
                                                           monitor='val_loss',
