@@ -13,7 +13,7 @@ class BaseConvDeconv():
     Works on stack True
     '''
     
-    def __init__(self, shape=(512,512)):
+    def __init__(self, shape=(512,512,3)):
         self.shape=shape
     
     def get_model(self):
