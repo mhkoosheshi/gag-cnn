@@ -102,6 +102,7 @@ class DataGenerator(Sequence):
       img = np.asarray(pimg)
       # img = np.float32(img)
       img = img
+      Q, W, Sin, Cos, Z = rect2maps(grasp_path)
 
       if self.aug_p !=0:
         rnd = random.randint(1,2)
@@ -109,7 +110,6 @@ class DataGenerator(Sequence):
         img = (rnd)*(255 - img) + (1-rnd)*img
         a = int(100*(random.random()))
         random.seed(a)
-        Q, W, Sin, Cos, Z = rect2maps(grasp_path)
         transformed = self.transform(image=img, masks=[Q, W, Sin, Cos, Z])
         Q = transformed['masks'][0]
         W = transformed['masks'][1]
