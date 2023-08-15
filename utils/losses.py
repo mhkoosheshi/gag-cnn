@@ -10,7 +10,7 @@ def jaccard_loss(y_pred, y_true, axis=(0, 1, 2, 3), smooth=1e-5):
     jaccard = tf.reduce_mean(jaccard)
     return jaccard
 
-def get_loss(loss_name='jaccard'):
+def get_loss(loss_name='jaccard_loss'):
 
-    if loss_name=='jaccard':
+    if loss_name=='jaccard_loss':
         return jaccard_loss
