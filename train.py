@@ -4,7 +4,7 @@ from tensorflow.keras.callbacks import ReduceLROnPlateau, EarlyStopping
 import datetime
 from models.BaseConvDeconv import BaseConvDeconv
 from utils.losses import get_loss
-from data_loader import get_loader
+from data.data_loader import get_loader
 from keras.models import load_model
 import matplotlib.pyplot as plt
 
