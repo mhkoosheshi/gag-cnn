@@ -1,6 +1,7 @@
 import numpy as np
 import cv2
 import glob
+import random
 
 
 def train_path_lists(mode='rgb'):
@@ -56,9 +57,12 @@ def test_path_lists():
     return list_RGB1, list_D1, list_grasp
 
 def unison_shuffle(a, b, c, d=None):
+  
   if d is None:
+    random.seed(42)
     inx=np.random.permutation(a.shape[0])
     return a[inx],b[inx],c[inx]
   elif d is not None:
+    random.seed(42)
     inx=np.random.permutation(a.shape[0])
     return a[inx], b[inx], c[inx], d[inx]
