@@ -22,6 +22,7 @@ def train(batch_size=8,
           train_val_factor = 0.2,
           aug: bool=False,
           aug_p: float=0,
+          val_aug_p=0,
           geo_p=0.5,
           color_p=0.5,
           noise_p=0.5,
@@ -41,6 +42,7 @@ def train(batch_size=8,
                                          noise_p=noise_p,
                                          iso_p=iso_p,
                                          aug_p=aug_p,
+                                         val_aug_p=val_aug_p,
                                          stack=stack)
           model = MODELS[model_name](shape=shape).get_model()
           loss = get_loss(loss_name=loss_name)
@@ -49,12 +51,15 @@ def train(batch_size=8,
           
           if resume:
               model = load_model(checkpoint_path, 
-              custom_objects={loss_name:loss})
+              custom_objects={loss_name:loss}
+              )
           checkpoint = tf.keras.callbacks.ModelCheckpoint(filepath=checkpoint_path,
                                                           save_weights_only=False,
                                                           monitor='val_loss',
                                                           mode='min',
-                                                          save_best_only=True)
+                                                          save_best_only=True,
+                                                          initial_value_threshold=0.05
+                                                          )
 
           model.compile(loss=loss,
                         optimizer=keras.optimizers.Adam(lr)

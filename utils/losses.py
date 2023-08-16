@@ -1,5 +1,6 @@
 import tensorflow as tf
 from tensorflow.keras.losses import Loss
+from tensorflow.keras.losses import MeanAbsoluteError, MeanSquaredError 
 
 
 def jaccard_loss(y_pred, y_true, axis=(0, 1, 2, 3), smooth=1e-5):
@@ -14,3 +15,9 @@ def get_loss(loss_name='jaccard_loss'):
 
     if loss_name=='jaccard_loss':
         return jaccard_loss
+
+    elif loss_name=='mse_loss':
+        return MeanSquaredError
+    
+    elif loss_name=='mae_loss':
+        return MeanAbsoluteError
