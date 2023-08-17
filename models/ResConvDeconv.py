@@ -76,7 +76,7 @@ def encoderdecoder(input, features):
     x = Conv2DTranspose(8, (3, 3), strides=1, padding='same')(x)
     x = Conv2D(8, (3, 3), activation='relu', padding='same')(x)
 
-    x = Conv2D(4, (1,1), activation='relu', padding='same')(x)
+    x = Conv2D(4, (1,1), activation='linear', padding='same')(x)
 
     return x
 

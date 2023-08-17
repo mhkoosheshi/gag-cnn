@@ -3,12 +3,14 @@ from tensorflow import keras
 from tensorflow.keras.callbacks import ReduceLROnPlateau, EarlyStopping
 import datetime
 from models.BaseConvDeconv import BaseConvDeconv
+from models.ResConvDeconv import ResConvDeconv
 from utils.losses import get_loss
 from data.data_loader import get_loader
 from keras.models import load_model
 import matplotlib.pyplot as plt
 
-MODELS = dict(BaseConvDeconv=BaseConvDeconv)
+MODELS = dict(BaseConvDeconv=BaseConvDeconv,
+              ResConvDeconv=ResConvDeconv)
 
 def train(batch_size=8,
           epochs = 150,
