@@ -103,6 +103,11 @@ class DataGenerator(Sequence):
       # img = np.float32(img)
       img = img
       Q, W, Sin, Cos, Z = rect2maps(grasp_path)
+      Q = cv2.resize(Q, (self.shape[0], self.shape[1]), interpolation=cv2.INTER_NEAREST)
+      W = cv2.resize(W, (self.shape[0], self.shape[1]), interpolation=cv2.INTER_NEAREST)
+      Sin = cv2.resize(Sin, (self.shape[0], self.shape[1]), interpolation=cv2.INTER_NEAREST)
+      Cos = cv2.resize(Cos, (self.shape[0], self.shape[1]), interpolation=cv2.INTER_NEAREST)
+      Z = cv2.resize(Z, (self.shape[0], self.shape[1]), interpolation=cv2.INTER_NEAREST)
 
       if self.aug_p !=0:
         rnd = random.randint(1,2)
