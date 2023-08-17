@@ -16,7 +16,7 @@ def get_loss(loss_name='jaccard_loss'):
         return jaccard_loss
 
     elif loss_name=='mse_loss':
-        return tf.keras.losses.MeanSquaredError
+        return tf.keras.losses.MeanSquaredError()
     
     elif loss_name=='mae_loss':
-        return tf.keras.losses.MeanAbsoluteError
+        return tf.keras.losses.MeanAbsoluteError()
