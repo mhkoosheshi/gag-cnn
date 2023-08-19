@@ -10,7 +10,7 @@ from tensorflow.keras.models import Model
 
 class VggConvDeconv():
     
-    def __init__(self, backbone='vgg16', shape=(256,256)):
+    def __init__(self, backbone='vgg16', shape=(256,256,3)):
         self.shape = shape
         self.backbone = backbone
     
@@ -32,7 +32,7 @@ def VggHead(resoutput, backbone='vgg16'):
     x = Conv2D(256, (3, 3), activation='relu', padding='same')(resoutput)
     x = Conv2D(128, (3, 3), activation='relu', padding='same')(x)
     x = Conv2D(64, (3, 3), activation='relu', padding='same')(x)
-    x = Conv2D(32, (3, 3), activation='relu', padding='same')(x)
+    # x = Conv2D(32, (3, 3), activation='relu', padding='same')(x)
     return x
 
 def encoderdecoder(input, features):
@@ -42,6 +42,10 @@ def encoderdecoder(input, features):
     x = Conv2D(16, (3, 3), activation='relu', strides=1, padding='same')(x)
     x = MaxPool2D(pool_size=(2,2))(x)
     x = Conv2D(32, (3, 3), activation='relu', strides=1, padding='same')(x)
+    x = MaxPool2D(pool_size=(2,2))(x)
+    x = Conv2D(64, (3, 3), activation='relu', strides=1, padding='same')(x)
+    x = MaxPool2D(pool_size=(2,2))(x)
+    x = Conv2D(64, (3, 3), activation='relu', strides=1, padding='same')(x)
     x = MaxPool2D(pool_size=(2,2))(x)
     x = Conv2D(64, (3, 3), activation='relu', strides=1, padding='same')(x)
 
@@ -75,7 +79,7 @@ def VggBackBone(backbone='vgg16', shape=(512,512,3)):
         for layer in base_model.layers[1:n_freeze+1]:
             layer.trainable = False
 
-        x0 = tf.keras.Input(shape=(224,224,3))
+        x0 = tf.keras.Input(shape=shape)
         x1 = base_model.layers[1](x0)
         x1 = base_model.layers[2](x1)
         s2d1 = Lambda(lambda x:tf.nn.space_to_depth(x,2), name='s2d1')
