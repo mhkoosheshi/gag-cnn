@@ -8,7 +8,7 @@ from tensorflow.keras.applications.vgg19 import VGG19
 from keras.layers import Lambda
 from tensorflow.keras.models import Model
 
-class Vggs2dConvDeconv():
+class VggConvDeconv():
     
     def __init__(self, backbone='vgg16', shape=(256,256)):
         self.shape = shape
