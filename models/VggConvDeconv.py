@@ -19,7 +19,7 @@ class VggConvDeconv():
         input = layers.Input(shape=self.shape)
 
         backbone = VggBackBone(backbone=self.backbone, shape=self.shape)
-        encoder2 = VggHead(backbone.output, backbone='resnet18')
+        encoder2 = VggHead(backbone.output, backbone=self.backbone)
         out = encoderdecoder(input, encoder2)
 
         model = Model(inputs=[input, backbone.input], outputs=[out])
@@ -28,7 +28,7 @@ class VggConvDeconv():
 
 
 
-def VggHead(resoutput, backbone='resnet18'):
+def VggHead(resoutput, backbone='vgg16'):
     x = Conv2D(256, (3, 3), activation='relu', padding='same')(resoutput)
     x = Conv2D(128, (3, 3), activation='relu', padding='same')(x)
     x = Conv2D(64, (3, 3), activation='relu', padding='same')(x)
