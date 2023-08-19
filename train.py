@@ -71,7 +71,8 @@ def train(batch_size=8,
                               validation_data=val_gen,
                               epochs=epochs,
                               batch_size=batch_size,
-                              callbacks=[early_stop, reduce_lr, checkpoint])
+                              callbacks=[early_stop, reduce_lr, checkpoint],
+                              workers=4)
 
           model.save(finalmodelpath +'/'+ model_name +'/'+ time + '.h5', save_format="h5")
           
