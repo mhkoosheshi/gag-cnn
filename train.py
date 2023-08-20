@@ -32,7 +32,8 @@ def train(batch_size=8,
           noise_p=0.5,
           iso_p=0.5,
           stack: bool=True,
-          min_lr = 1e-6
+          min_lr = 1e-6,
+          earlystop_epochs = 25
           ):
           
           train_gen, val_gen= get_loader(batch_size=batch_size,
@@ -50,8 +51,10 @@ def train(batch_size=8,
                                          stack=stack)
           if type(model)=='str':
               model = MODELS[model](shape=shape).get_model()
+              model_name = model
           else:
               model = model
+              model_name = model.name()
           
           loss = get_loss(loss_name=loss_name)
           reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.5, patience=5, min_lr=min_lr)
@@ -79,7 +82,7 @@ def train(batch_size=8,
                               batch_size=batch_size,
                               callbacks=[early_stop, reduce_lr, checkpoint],
                               workers=4)
-
+          
           model.save(finalmodelpath +'/'+ model_name +'/'+ time + '.h5', save_format="h5")
           
           plt.plot(history.history["loss"],'r')

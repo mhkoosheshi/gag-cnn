@@ -22,7 +22,7 @@ class VggConvDeconv():
         encoder2 = VggHead(backbone.output, backbone=self.backbone)
         out = encoderdecoder(input, encoder2)
 
-        model = Model(inputs=[input, backbone.input], outputs=[out])
+        model = Model(inputs=[input, backbone.input], outputs=[out], name='vggmodel')
         
         return model
 
