@@ -58,7 +58,7 @@ def train(batch_size=8,
           
           loss = get_loss(loss_name=loss_name)
           reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.5, patience=5, min_lr=min_lr)
-          early_stop = EarlyStopping(monitor='val_loss', patience=15)
+          early_stop = EarlyStopping(monitor='val_loss', patience=earlystop_epochs)
           
           if resume:
               model = load_model(checkpoint_path, 
