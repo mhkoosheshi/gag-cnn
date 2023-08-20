@@ -69,7 +69,7 @@ def train(batch_size=8,
                                                           monitor='val_loss',
                                                           mode='min',
                                                           save_best_only=True,
-                                                          initial_value_threshold=0.05
+                                                          initial_value_threshold=0.3
                                                           )
 
           model.compile(loss=loss,
