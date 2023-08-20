@@ -19,7 +19,7 @@ def train(batch_size=8,
           lr = 1e-4,
           shape=(512,512),
           loss_name='jaccard_loss',
-          model_name: str='BaseConvDeconv',
+          model='BaseConvDeconv',
           checkpoint_path = '/content/drive/MyDrive/weights_mohokoo/checkpoints',
           resume = False,
           finalmodelpath = '/content/drive/MyDrive/weights_mohokoo/checkpoints',
@@ -48,7 +48,11 @@ def train(batch_size=8,
                                          aug_p=aug_p,
                                          val_aug_p=val_aug_p,
                                          stack=stack)
-          model = MODELS[model_name](shape=shape).get_model()
+          if type(model)=='str':
+              model = MODELS[model](shape=shape).get_model()
+          else:
+              model = model
+          
           loss = get_loss(loss_name=loss_name)
           reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.5, patience=5, min_lr=min_lr)
           early_stop = EarlyStopping(monitor='val_loss', patience=15)
