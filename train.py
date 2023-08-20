@@ -54,7 +54,7 @@ def train(batch_size=8,
               model_name = model
           else:
               model = model
-              model_name = model.name()
+              model_name = model.name
           
           loss = get_loss(loss_name=loss_name)
           reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.5, patience=5, min_lr=min_lr)
