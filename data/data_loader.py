@@ -9,7 +9,8 @@ import random
 from tensorflow.keras.utils import Sequence
 from data.path_lists import train_path_lists, test_path_lists, unison_shuffle
 import albumentations as A
-from utils.utils import rect2maps
+from utils.maps import rect2maps
+from utils.utils import crop_object, crop_maps
 
 class DataGenerator(Sequence):
   '''
@@ -30,6 +31,7 @@ class DataGenerator(Sequence):
               noise_p=0.5,
               iso_p=0.5,
               stack=False,
+              crop=False,
               ):
 
     self.RGBobj_paths = RGBobj_paths
@@ -41,6 +43,7 @@ class DataGenerator(Sequence):
     self.aug_p = aug_p
     self.on_epoch_end()
     self.stack = stack
+    self.crop = crop
 
     self.geo = A.Compose([
       A.HorizontalFlip(p=0.5)
@@ -98,11 +101,20 @@ class DataGenerator(Sequence):
       
       # RGB1 data
       img = cv2.cvtColor(cv2.imread(RGBobj_path), cv2.COLOR_BGR2RGB)
+      # object bounding box here
+      if self.crop:
+        img, params = crop_object(img)
       pimg = (Image.fromarray(img)).resize((self.shape[0], self.shape[1]))
       img = np.asarray(pimg)
       # img = np.float32(img)
       img = img
       Q, W, Sin, Cos, Z = rect2maps(grasp_path)
+      if self.crop:
+        Q = crop_maps(Q, params)
+        W = crop_maps(W, params)
+        Sin = crop_maps(Sin, params)
+        Cos = crop_maps(Cos, params)
+
       Q = cv2.resize(Q, (self.shape[0], self.shape[1]), interpolation=cv2.INTER_NEAREST)
       W = cv2.resize(W, (self.shape[0], self.shape[1]), interpolation=cv2.INTER_NEAREST)
       Sin = cv2.resize(Sin, (self.shape[0], self.shape[1]), interpolation=cv2.INTER_NEAREST)
@@ -184,7 +196,8 @@ def get_loader(batch_size=8,
               noise_p=0.5,
               iso_p=0.5,
               val_aug_p=0,
-              stack=False):
+              stack=False,
+              crop=False):
     # currently only for rgb
     RGBobj_paths, RGBiso_paths, grasp_paths = train_path_lists(mode=mode)
     n = len(RGBobj_paths)
@@ -211,7 +224,8 @@ def get_loader(batch_size=8,
                                 color_p=color_p,
                                 noise_p=noise_p,
                                 iso_p=iso_p,
-                                stack=stack
+                                stack=stack,
+                                crop=crop
                                 )
     val_gen = DataGenerator(RGBobj_val,
                             RGBiso_val, 
@@ -224,7 +238,8 @@ def get_loader(batch_size=8,
                             color_p=color_p,
                             noise_p=noise_p,
                             iso_p=iso_p,
-                            stack=stack
+                            stack=stack,
+                            crop=crop
                             )
 
     # test_gen = DataGenerator(RGB1_test,

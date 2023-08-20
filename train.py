@@ -33,7 +33,8 @@ def train(batch_size=8,
           iso_p=0.5,
           stack: bool=True,
           min_lr = 1e-6,
-          earlystop_epochs = 25
+          earlystop_epochs = 25,
+          crop = False,
           ):
           
           train_gen, val_gen= get_loader(batch_size=batch_size,
@@ -48,7 +49,8 @@ def train(batch_size=8,
                                          iso_p=iso_p,
                                          aug_p=aug_p,
                                          val_aug_p=val_aug_p,
-                                         stack=stack)
+                                         stack=stack,
+                                         crop=crop)
           if type(model)=='str':
               model = MODELS[model](shape=shape).get_model()
               model_name = model
@@ -57,7 +59,7 @@ def train(batch_size=8,
               model_name = model.name
           
           loss = get_loss(loss_name=loss_name)
-          reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.5, patience=5, min_lr=min_lr)
+          reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.5, patience=(earlystop_epochs/2), min_lr=min_lr)
           early_stop = EarlyStopping(monitor='val_loss', patience=earlystop_epochs)
           
           if resume:
@@ -69,7 +71,7 @@ def train(batch_size=8,
                                                           monitor='val_loss',
                                                           mode='min',
                                                           save_best_only=True,
-                                                          initial_value_threshold=0.3
+                                                          initial_value_threshold=0.33
                                                           )
 
           model.compile(loss=loss,

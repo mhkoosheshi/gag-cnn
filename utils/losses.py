@@ -20,3 +20,6 @@ def get_loss(loss_name='jaccard_loss'):
     
     elif loss_name=='mae_loss':
         return tf.keras.losses.MeanAbsoluteError()
+
+    elif loss_name=='mape_loss':
+        return tf.keras.losses.MeanAbsolutePercentageError()
