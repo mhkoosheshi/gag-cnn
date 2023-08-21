@@ -197,13 +197,15 @@ def get_loader(batch_size=8,
               iso_p=0.5,
               val_aug_p=0,
               stack=False,
-              crop=False):
+              crop=False,
+              dataset_factor = 1):
     # currently only for rgb
     RGBobj_paths, RGBiso_paths, grasp_paths = train_path_lists(mode=mode)
     n = len(RGBobj_paths)
     RGBobj_paths, RGBiso_paths, grasp_paths = np.array(RGBobj_paths), np.array(RGBiso_paths), np.array(grasp_paths)
     RGBobj_paths, RGBiso_paths, grasp_paths = unison_shuffle(a=RGBobj_paths, b=RGBiso_paths, c=grasp_paths)
     RGBobj_paths, RGBiso_paths, grasp_paths = list(RGBobj_paths), list(RGBiso_paths), list(grasp_paths)
+    RGBobj_paths, RGBiso_paths, grasp_paths = RGBobj_paths[:int(n*dataset_factor)], RGBiso_paths[:int(n*dataset_factor)], grasp_paths[:int(n*dataset_factor)]
     RGBobj_train, RGBobj_val = RGBobj_paths[int(n*factor):], RGBobj_paths[:int(n*factor)]
     RGBiso_train, RGBiso_val = RGBiso_paths[int(n*factor):], RGBiso_paths[:int(n*factor)]
     grasp_train, grasp_val = grasp_paths[int(n*factor):], grasp_paths[:int(n*factor)]

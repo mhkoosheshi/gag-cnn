@@ -25,6 +25,12 @@ def train_path_lists(mode='rgb'):
       d_iso.append(d_path)
     for d_path in glob.glob(f"/content/drive/MyDrive/gag-cnn/obj/d*.png"):
       d_obj.append(d_path)
+  
+  grasps = sorted(grasps)
+  rgb_obj = sorted(rgb_obj)
+  d_obj = sorted(d_obj)
+  rgb_iso = sorted(rgb_iso)
+  d_iso = sorted(d_iso)
 
   if mode=='rgb':
     return rgb_obj, rgb_iso, grasps
