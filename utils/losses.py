@@ -26,3 +26,6 @@ def get_loss(loss_name='jaccard_loss'):
 
     elif loss_name=='mspe_loss':
         return tf.keras.losses.MeanSquaredPercentageError()
+
+    elif loss_name=='mselog_loss':
+        return tf.keras.losses.MeanSquaredLogarithmicError()
