@@ -35,6 +35,7 @@ def train(batch_size=8,
           min_lr = 1e-6,
           earlystop_epochs = 25,
           crop = False,
+          maps=None
           ):
           
           train_gen, val_gen= get_loader(batch_size=batch_size,
@@ -50,7 +51,8 @@ def train(batch_size=8,
                                          aug_p=aug_p,
                                          val_aug_p=val_aug_p,
                                          stack=stack,
-                                         crop=crop)
+                                         crop=crop,
+                                         maps=maps)
           if type(model)=='str':
               model = MODELS[model](shape=shape).get_model()
               model_name = model

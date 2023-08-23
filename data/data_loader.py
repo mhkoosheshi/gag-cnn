@@ -32,6 +32,7 @@ class DataGenerator(Sequence):
               iso_p=0.5,
               stack=False,
               crop=False,
+              maps=None
               ):
 
     self.RGBobj_paths = RGBobj_paths
@@ -44,6 +45,7 @@ class DataGenerator(Sequence):
     self.on_epoch_end()
     self.stack = stack
     self.crop = crop
+    self.maps = maps
 
     self.geo = A.Compose([
       A.HorizontalFlip(p=0.5)
@@ -177,12 +179,29 @@ class DataGenerator(Sequence):
     Cosmaps = np.array(Cosmaps)
     Zmaps = np.array(Zmaps)
 
-    if self.stack:
-      outputs = np.stack([Qmaps, Wmaps, Sinmaps, Cosmaps], axis=-1)
-      return [rgbobj, rgbiso], [outputs]
-    
-    if not self.stack:
-      return [rgbobj, rgbiso], [Qmaps, Wmaps, Sinmaps, Cosmaps]
+    if self.maps is None:
+      if self.stack:
+        outputs = np.stack([Qmaps, Wmaps, Sinmaps, Cosmaps], axis=-1)
+        return [rgbobj, rgbiso], [outputs]
+      
+      if not self.stack:
+        return [rgbobj, rgbiso], [Qmaps, Wmaps, Sinmaps, Cosmaps]
+
+    if self.maps is not None:
+      if self.maps is 'Q':
+        return [rgbobj, rgbiso], [Qmaps]
+
+      if self.maps is 'W':
+        return [rgbobj, rgbiso], [Wmaps]
+
+      if self.maps is 'Sin':
+        return [rgbobj, rgbiso], [Sinmaps]
+
+      if self.maps is 'Cos':
+        return [rgbobj, rgbiso], [Cosmaps]
+      
+      if self.maps is 'Angle':
+        return [rgbobj, rgbiso], [Sinmaps, Cosmaps]
 
 def get_loader(batch_size=8,
               mode='rgb',
@@ -198,7 +217,8 @@ def get_loader(batch_size=8,
               val_aug_p=0,
               stack=False,
               crop=False,
-              dataset_factor = 1):
+              dataset_factor=1,
+              maps=None):
     # currently only for rgb
     RGBobj_paths, RGBiso_paths, grasp_paths = train_path_lists(mode=mode)
     n = len(RGBobj_paths)
@@ -227,7 +247,8 @@ def get_loader(batch_size=8,
                                 noise_p=noise_p,
                                 iso_p=iso_p,
                                 stack=stack,
-                                crop=crop
+                                crop=crop,
+                                maps=maps
                                 )
     val_gen = DataGenerator(RGBobj_val,
                             RGBiso_val, 
@@ -241,17 +262,8 @@ def get_loader(batch_size=8,
                             noise_p=noise_p,
                             iso_p=iso_p,
                             stack=stack,
-                            crop=crop
+                            crop=crop,
+                            maps=maps
                             )
-
-    # test_gen = DataGenerator(RGB1_test,
-    #                             RGB2_test, 
-    #                             RGB3_test,
-    #                             grasp_test,
-    #                             batch_size=batch_size,
-    #                             shape=shape,
-    #                             shuffle=False,
-    #                             aug_p=0
-    #                             )
 
     return train_gen, val_gen
