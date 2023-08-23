@@ -9,11 +9,11 @@ from keras.layers import Lambda
 from tensorflow.keras.models import Model
 
 class VggConvDeconv():
-    
+
     def __init__(self, backbone='vgg16', shape=(256,256,3)):
         self.shape = shape
         self.backbone = backbone
-    
+
     def get_model(self):
         # obj input
         input = layers.Input(shape=self.shape)
@@ -22,8 +22,8 @@ class VggConvDeconv():
         encoder2 = VggHead(backbone.output, backbone=self.backbone)
         out = encoderdecoder(input, encoder2)
 
-        model = Model(inputs=[input, backbone.input], outputs=[out], name='vggmodel')
-        
+        model = Model(inputs=[input, backbone.input], outputs=[out], name='VggConvDeconv_'+ self.backbone)
+
         return model
 
 
@@ -36,7 +36,7 @@ def VggHead(resoutput, backbone='vgg16'):
     return x
 
 def encoderdecoder(input, features):
-    
+
     x = Conv2D(8, (3, 3), activation='relu', strides=1, padding='same')(input)
     x = MaxPool2D(pool_size=(2,2))(x)
     x = Conv2D(16, (3, 3), activation='relu', strides=1, padding='same')(x)
@@ -65,8 +65,8 @@ def encoderdecoder(input, features):
     return x
 
 def VggBackBone(backbone='vgg16', shape=(512,512,3)):
-    
-    
+
+
     if backbone=='vgg16':
         model = VGG16(weights='imagenet', include_top=False, input_shape=shape)
         return model
