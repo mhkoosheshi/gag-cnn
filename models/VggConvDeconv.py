@@ -51,15 +51,15 @@ def encoderdecoder(input, features):
 
     x = layers.concatenatecnct = layers.concatenate([x, features])
     x = Conv2DTranspose(128, (3, 3), strides=2, padding='same')(x)
-    x = Conv2D(128, (3, 3), activation='linear', padding='same')(x)
+    x = Conv2D(128, (3, 3), activation='relu', padding='same')(x)
     x = Conv2DTranspose(64, (3, 3), strides=2, padding='same')(x)
-    x = Conv2D(64, (3, 3), activation='linear', padding='same')(x)
+    x = Conv2D(64, (3, 3), activation='relu', padding='same')(x)
     x = Conv2DTranspose(32, (3, 3), strides=2, padding='same')(x)
-    x = Conv2D(32, (3, 3), activation='linear', padding='same')(x)
+    x = Conv2D(32, (3, 3), activation='relu', padding='same')(x)
     x = Conv2DTranspose(16, (3, 3), strides=2, padding='same')(x)
-    x = Conv2D(16, (3, 3), activation='linear', padding='same')(x)
+    x = Conv2D(16, (3, 3), activation='relu', padding='same')(x)
     x = Conv2DTranspose(8, (3, 3), strides=2, padding='same')(x)
-    x = Conv2D(8, (3, 3), activation='linear', padding='same')(x)
+    x = Conv2D(8, (3, 3), activation='relu', padding='same')(x)
     x = Conv2D(4, (1,1), activation='linear', padding='same')(x)
 
     return x
