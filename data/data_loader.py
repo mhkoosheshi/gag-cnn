@@ -188,19 +188,19 @@ class DataGenerator(Sequence):
         return [rgbobj, rgbiso], [Qmaps, Wmaps, Sinmaps, Cosmaps]
 
     if self.maps is not None:
-      if self.maps is 'Q':
+      if self.maps == 'Q':
         return [rgbobj, rgbiso], [Qmaps]
 
-      if self.maps is 'W':
+      if self.maps == 'W':
         return [rgbobj, rgbiso], [Wmaps]
 
-      if self.maps is 'Sin':
+      if self.maps == 'Sin':
         return [rgbobj, rgbiso], [Sinmaps]
 
-      if self.maps is 'Cos':
+      if self.maps == 'Cos':
         return [rgbobj, rgbiso], [Cosmaps]
       
-      if self.maps is 'Angle':
+      if self.maps == 'Angle':
         return [rgbobj, rgbiso], [Sinmaps, Cosmaps]
 
 def get_loader(batch_size=8,
