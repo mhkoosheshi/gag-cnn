@@ -80,7 +80,8 @@ def train(batch_size=8,
                         optimizer=keras.optimizers.Adam(lr),
                         metrics = [tf.keras.metrics.MeanSquaredError(),
                                    tf.keras.metrics.RootMeanSquaredError(),
-                                   tf.keras.metrics.MeanAbsoluteError()]
+                                   tf.keras.metrics.MeanAbsoluteError(),
+                                   tf.keras.metrics.MeanAbsolutePercentageError()]
                         )
           time = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
           history = model.fit(train_gen,
