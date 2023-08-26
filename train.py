@@ -77,7 +77,10 @@ def train(batch_size=8,
                                                           )
 
           model.compile(loss=loss,
-                        optimizer=keras.optimizers.Adam(lr)
+                        optimizer=keras.optimizers.Adam(lr),
+                        metrics = [tf.keras.metrics.MeanSquaredError(),
+                                   tf.keras.metrics.RootMeanSquaredError(),
+                                   tf.keras.metrics.MeanAbsoluteError()]
                         )
           time = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
           history = model.fit(train_gen,
