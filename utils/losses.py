@@ -50,3 +50,6 @@ def get_loss(loss_name='jaccard_loss'):
 
     elif loss_name=='focal_tversky_loss':
         return focal_tversky
+
+    elif loss_name=='rmse_loss':
+        return tf.keras.metrics.RootMeanSquaredError()
