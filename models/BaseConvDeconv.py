@@ -71,3 +71,129 @@ def encoder(inputs, name, activation='relu'):
     outputs = conv5
 
     return outputs
+
+
+
+#####################################
+
+import tensorflow as tf
+from tensorflow import keras
+from tensorflow.keras import layers
+from tensorflow.keras.layers import Conv2DTranspose, Conv2D, MaxPool2D, BatchNormalization, Dropout, SeparableConv2D, Activation
+from tensorflow.keras.applications.resnet50 import ResNet50
+from tensorflow.keras.applications.vgg16 import VGG16
+from tensorflow.keras.applications.vgg19 import VGG19
+from tensorflow.keras.models import Model
+
+class GAG_CNN():
+
+    def __init__(self, shape=(256,256,3)):
+        self.shape = shape
+
+    def get_model(self):
+        # obj input
+        input1 = layers.Input(shape=self.shape)
+        # iso input
+        input2 = layers.Input(shape=self.shape)
+
+        backbone = Backbone(input2, shape=self.shape)
+        encoder2 = Head(backbone)
+        out = encoderdecoder(input1, encoder2)
+
+        model = Model(inputs=[input1, input2], outputs=[out], name='GAG_CNN')
+
+        return model
+
+
+
+def Head(input):
+    x = input
+    # x = Conv2D(256, (3, 3), activation='relu', padding='same')(x)
+    # x = Conv2D(128, (3, 3), activation='relu', padding='same')(x)
+    # x = Conv2D(128, (3, 3), activation='relu', padding='same')(x)
+    # x = Conv2D(32, (3, 3), activation='relu', padding='same')(x)
+    return x
+
+def encoderdecoder(input, features):
+
+    x = Conv2D(8, (3, 3), strides=1, padding='same')(input)
+    x = BatchNormalization()(x)
+    x = Activation('relu')(x)
+    x = MaxPool2D(pool_size=(2,2))(x)
+    
+    x = Conv2D(16, (3, 3), strides=1, padding='same')(x)
+    x = BatchNormalization()(x)
+    x = Activation('relu')(x)
+    x = MaxPool2D(pool_size=(2,2))(x)
+    
+    x = Conv2D(32, (3, 3), strides=1, padding='same')(x)
+    x = BatchNormalization()(x)
+    x = Activation('relu')(x)
+    x = MaxPool2D(pool_size=(2,2))(x)
+    
+    x = Conv2D(64, (3, 3), strides=1, padding='same')(x)
+    x = BatchNormalization()(x)
+    x = Activation('relu')(x)
+    x = MaxPool2D(pool_size=(2,2))(x)
+
+    x = Conv2D(128, (3, 3), strides=1, padding='same')(x)
+    x = BatchNormalization()(x)
+    x = Activation('relu')(x)
+    x = MaxPool2D(pool_size=(2,2))(x)
+    
+
+    x = layers.concatenatecnct = layers.concatenate([x, features])
+    x = Conv2D(128, (3, 3), padding='same')(x)
+    x = BatchNormalization()(x)
+    x = Activation('relu')(x)
+    x = Conv2DTranspose(128, (3, 3), strides=2, padding='same')(x)
+    
+    x = Conv2D(64, (3, 3), padding='same')(x)
+    x = BatchNormalization()(x)
+    x = Activation('relu')(x)
+    x = Conv2DTranspose(64, (3, 3), strides=2, padding='same')(x)
+    
+    x = Conv2D(32, (3, 3), padding='same')(x)
+    x = BatchNormalization()(x)
+    x = Activation('relu')(x)
+    x = Conv2DTranspose(32, (3, 3), strides=2, padding='same')(x)
+
+    x = Conv2D(16, (3, 3), padding='same')(x)
+    x = BatchNormalization()(x)
+    x = Activation('relu')(x)
+    x = Conv2DTranspose(16, (3, 3), strides=2, padding='same')(x)
+
+    x = Conv2D(8, (3, 3), padding='same')(x)
+    x = BatchNormalization()(x)
+    x = Activation('relu')(x)
+    x = Conv2DTranspose(8, (3, 3), strides=2, padding='same')(x)
+    x = Conv2D(4, (1,1), activation='linear', padding='same')(x)
+
+    return x
+
+def Backbone(input, shape=(512,512,3)):
+    x = Conv2D(8, (3, 3), strides=1, padding='same')(input)
+    x = BatchNormalization()(x)
+    x = Activation('relu')(x)
+    x = MaxPool2D(pool_size=(2,2))(x)
+    
+    x = Conv2D(16, (3, 3), activation='relu', strides=1, padding='same')(x)
+    x = BatchNormalization()(x)
+    x = Activation('relu')(x)
+    x = MaxPool2D(pool_size=(2,2))(x)
+    
+    x = Conv2D(32, (3, 3), activation='relu', strides=1, padding='same')(x)
+    x = BatchNormalization()(x)
+    x = Activation('relu')(x)
+    x = MaxPool2D(pool_size=(2,2))(x)
+    
+    x = Conv2D(64, (3, 3), activation='relu', strides=1, padding='same')(x)
+    x = BatchNormalization()(x)
+    x = Activation('relu')(x)
+    x = MaxPool2D(pool_size=(2,2))(x)
+    
+    x = Conv2D(128, (3, 3), activation='relu', strides=1, padding='same')(x)
+    x = BatchNormalization()(x)
+    x = Activation('relu')(x)
+    x = MaxPool2D(pool_size=(2,2))(x)
+    return x
