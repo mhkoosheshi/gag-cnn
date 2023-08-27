@@ -25,6 +25,9 @@ def focal_tversky(y_true, y_pred):
     gamma = 0.75
     return K.pow((1 - pt_1), gamma)
 
+def rmse_loss(y_true, y_pred):
+        return K.sqrt(K.mean(K.square(y_pred - y_true), axis=-1)) 
+
 def get_loss(loss_name='jaccard_loss'):
 
     if loss_name=='jaccard_loss':
@@ -52,4 +55,4 @@ def get_loss(loss_name='jaccard_loss'):
         return focal_tversky
 
     elif loss_name=='rmse_loss':
-        return tf.keras.metrics.RootMeanSquaredError()
+        return rmse_loss
