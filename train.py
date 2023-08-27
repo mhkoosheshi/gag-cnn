@@ -84,7 +84,7 @@ def train(batch_size=8,
                                    tf.keras.metrics.MeanAbsolutePercentageError()]
                         )
           time = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
-          log_dir = "/content/drive/MyDrive/gag-cnn/logs/" + model_name + "/" + time
+          log_dir = "/content/gag-cnn/logs/" + model_name + "/" + time
           tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=log_dir, histogram_freq=1)
           history = model.fit(train_gen,
                               validation_data=val_gen,
