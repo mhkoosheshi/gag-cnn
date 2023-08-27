@@ -84,11 +84,13 @@ def train(batch_size=8,
                                    tf.keras.metrics.MeanAbsolutePercentageError()]
                         )
           time = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+          log_dir = "/content/drive/MyDrive/weights_mohokoo/logs/" + model_name + "/" + time
+          tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=log_dir, histogram_freq=1)
           history = model.fit(train_gen,
                               validation_data=val_gen,
                               epochs=epochs,
                               batch_size=batch_size,
-                              callbacks=[early_stop, reduce_lr, checkpoint],
+                              callbacks=[early_stop, reduce_lr, checkpoint, tensorboard_callback],
                               workers=4)
           
           model.save(finalmodelpath +'/'+ model_name +'/'+ time + '.h5', save_format="h5")
@@ -98,7 +100,7 @@ def train(batch_size=8,
           plt.plot(history.history["val_loss"], 'b')
           plt.grid(color='black', linestyle='--', linewidth=1)
           fvalloss = history.history["val_loss"][-1]
-          plt.title(f"final val loss is {fvalloss}")
+          plt.title(f"final val loss is {fvalloss} for {loss_name}")
           plt.xlabel("epoch")
           plt.ylabel("loss")
 
