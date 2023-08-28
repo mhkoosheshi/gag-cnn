@@ -111,6 +111,12 @@ class DataGenerator(Sequence):
       # img = np.float32(img)
       img = img
       Q, W, Sin, Cos, Z = rect2maps(grasp_path)
+      Q = np.asarray(Q, np.float64)
+      W = np.asarray(W, np.float64)
+      Sin = np.asarray(Sin, np.float64)
+      Cos = np.asarray(Cos, np.float64)
+      Z = np.asarray(Z, np.float64)
+      
       if self.crop:
         Q = crop_maps(Q, params)
         W = crop_maps(W, params)
