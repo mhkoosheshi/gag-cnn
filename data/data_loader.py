@@ -223,7 +223,7 @@ def get_loader(batch_size=8,
               val_aug_p=0,
               stack=False,
               crop=False,
-              dataset_factor=1,
+              dataset_factor=1.0,
               maps=None):
     # currently only for rgb
     RGBobj_paths, RGBiso_paths, grasp_paths = train_path_lists(mode=mode)

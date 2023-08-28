@@ -17,7 +17,7 @@ MODELS = dict(BaseConvDeconv=BaseConvDeconv,
 def train(batch_size=8,
           epochs = 150,
           lr = 1e-4,
-          shape=(512,512),
+          shape=(512,512,3),
           loss_name='jaccard_loss',
           model='BaseConvDeconv',
           checkpoint_path = '/content/drive/MyDrive/weights_mohokoo/checkpoints',
@@ -35,7 +35,8 @@ def train(batch_size=8,
           min_lr = 1e-6,
           earlystop_epochs = 25,
           crop = False,
-          maps=None
+          maps=None,
+          dataset_factor=1.0
           ):
           
           train_gen, val_gen= get_loader(batch_size=batch_size,
@@ -52,7 +53,8 @@ def train(batch_size=8,
                                          val_aug_p=val_aug_p,
                                          stack=stack,
                                          crop=crop,
-                                         maps=maps)
+                                         maps=maps,
+                                         dataset_factor=dataset_factor)
           if type(model)=='str':
               model = MODELS[model](shape=shape).get_model()
               model_name = model
