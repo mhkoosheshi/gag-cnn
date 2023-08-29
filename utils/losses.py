@@ -31,7 +31,7 @@ def rmse_loss(y_true, y_pred):
 
 def custom_loss(y_true, y_pred):
     
-    y_true1 = np.ceil(y_true)*0.9
+    y_true1 = tf.math.ceil(y_true)*0.9
     y_true1 = 1 - y_true1
     loss = K.mean((K.square(y_pred - y_true))/(y_true1), axis=-1)
 
