@@ -28,6 +28,14 @@ def focal_tversky(y_true, y_pred):
 def rmse_loss(y_true, y_pred):
         return K.sqrt(K.mean(K.square(y_pred - y_true), axis=-1)) 
 
+def custom_loss(y_true, y_pred):
+    
+    y_true1 = np.ceil(y_true)*0.9
+    y_true1 = 1 - y_true1
+    loss = K.mean((K.square(y_pred - y_true))/(y_true1), axis=-1)
+
+    return loss
+
 def get_loss(loss_name='jaccard_loss'):
 
     if loss_name=='jaccard_loss':
@@ -40,7 +48,7 @@ def get_loss(loss_name='jaccard_loss'):
         return tf.keras.losses.MeanAbsoluteError()
 
     elif loss_name=='mape_loss':
-        return tf.keras.losses.MeanAbsolutePercentageError()
+        return 0.0001 *tf.keras.losses.MeanAbsolutePercentageError()
 
     elif loss_name=='mspe_loss':
         return tf.keras.losses.MeanSquaredPercentageError()
@@ -56,3 +64,6 @@ def get_loss(loss_name='jaccard_loss'):
 
     elif loss_name=='rmse_loss':
         return rmse_loss
+
+    elif loss_name=='custom_loss':
+        return custom_loss
