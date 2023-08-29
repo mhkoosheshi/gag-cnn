@@ -36,7 +36,8 @@ def train(batch_size=8,
           earlystop_epochs = 25,
           crop = False,
           maps=None,
-          dataset_factor=1.0
+          dataset_factor=1.0,
+          lr_scheduler=None
           ):
           
           train_gen, val_gen= get_loader(batch_size=batch_size,
@@ -63,7 +64,12 @@ def train(batch_size=8,
               model_name = model.name
           
           loss = get_loss(loss_name=loss_name)
-          reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.5, patience=(earlystop_epochs/2), min_lr=min_lr)
+
+          if lr_scheduler is None:
+            reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.5, patience=(earlystop_epochs/2), min_lr=min_lr)
+          else:
+            reduce_lr = tf.keras.callbacks.LearningRateScheduler(lr_scheduler)
+
           early_stop = EarlyStopping(monitor='val_loss', patience=earlystop_epochs)
           
           if resume:
