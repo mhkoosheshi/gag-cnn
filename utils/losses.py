@@ -1,6 +1,7 @@
 import tensorflow as tf
 from tensorflow.keras.losses import Loss
 import tensorflow.keras.backend as K
+import numpy as np
 
 
 def jaccard_loss(y_pred, y_true, axis=(0, 1, 2, 3), smooth=1e-5):
