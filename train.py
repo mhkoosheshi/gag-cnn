@@ -40,22 +40,22 @@ def train(batch_size=8,
           lr_scheduler=None
           ):
           
-          train_gen, val_gen= get_loader(batch_size=batch_size,
-                                         mode='rgb',
-                                         shape=shape,
-                                         shuffle=True,
-                                         factor=train_val_factor,
-                                         aug=aug,
-                                         geo_p=geo_p,
-                                         color_p=color_p,
-                                         noise_p=noise_p,
-                                         iso_p=iso_p,
-                                         aug_p=aug_p,
-                                         val_aug_p=val_aug_p,
-                                         stack=stack,
-                                         crop=crop,
-                                         maps=maps,
-                                         dataset_factor=dataset_factor)
+          train_gen, val_gen, _= get_loader(batch_size=batch_size,
+                                            mode='rgb',
+                                            shape=shape,
+                                            shuffle=True,
+                                            factor=train_val_factor,
+                                            aug=aug,
+                                            geo_p=geo_p,
+                                            color_p=color_p,
+                                            noise_p=noise_p,
+                                            iso_p=iso_p,
+                                            aug_p=aug_p,
+                                            val_aug_p=val_aug_p,
+                                            stack=stack,
+                                            crop=crop,
+                                            maps=maps,
+                                            dataset_factor=dataset_factor)
           if type(model)=='str':
               model = MODELS[model](shape=shape).get_model()
               model_name = model
