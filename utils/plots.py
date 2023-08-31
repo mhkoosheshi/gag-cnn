@@ -14,7 +14,8 @@ def take_tests(model_path, test_gen, path=None, figsize = (25,10), tests=[1, 3, 
     tests: test batches in a list. each batch with an integer >=0 and each has 15 cases for the current AppGraD.
     """
 
-    model = load_model(model_path, custom_objects={"jaccard_loss": get_loss('jaccard_loss')})
+    model = load_model(model_path, custom_objects={"jaccard_loss": get_loss('jaccard_loss'),
+                                                   "custom_loss": get_loss('custom_loss')})
     if path==None:
         path = model_path.split('/')
         path.pop(0)
