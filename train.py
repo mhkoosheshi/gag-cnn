@@ -113,5 +113,5 @@ def train(batch_size=8,
           plt.xlabel("epoch")
           plt.ylabel("loss")
 
-          plt.savefig(finalmodelpath +'/'+ model_name +'/'+ time + '.png')
+          plt.savefig(finalmodelpath +'/'+ model_name +'/'+ time + '/' + time + '.png')
 
