@@ -102,7 +102,7 @@ def train(batch_size=8,
                               callbacks=[early_stop, reduce_lr, checkpoint, tensorboard_callback],
                               workers=4)
           
-          model.save(finalmodelpath +'/'+ model_name +'/'+ time + '.h5', save_format="h5")
+          model.save(finalmodelpath +'/'+ model_name +'/'+ time + '/' + time + '.h5', save_format="h5")
           
           plt.plot(history.history["loss"],'r')
           plt.plot(history.history["val_loss"],'bo', markersize=2)

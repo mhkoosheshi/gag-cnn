@@ -7,18 +7,21 @@ from data.data_loader import get_loader
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-def take_tests(model_path, test_gen, figsize = (25,10), tests=[1, 3, 4]):
+def take_tests(model_path, test_gen, path=None, figsize = (25,10), tests=[1, 3, 4]):
     """
     Evaluate your models on the validation and test sets and save the plots and images
 
     tests: test batches in a list. each batch with an integer >=0 and each has 15 cases for the current AppGraD.
     """
-    plt.ioff()
+
     model = load_model(model_path, custom_objects={"jaccard_loss": get_loss('jaccard_loss')})
-    path = model_path.split('/')
-    path.pop(0)
-    path.pop(-1)
-    path = "/".join(path) + '/maps'
+    if path==None:
+        path = model_path.split('/')
+        path.pop(0)
+        path.pop(-1)
+        path = "/".join(path) + '/maps'
+    else:
+        path=path
     # model_name = model.name()
 
     for k in tests:
