@@ -15,7 +15,9 @@ def take_tests(model_path, test_gen, figsize = (25,10), tests=[1, 3, 4]):
     """
     plt.ioff()
     model = load_model(model_path, custom_objects={"jaccard_loss": get_loss('jaccard_loss')})
-    path = (model_path.split('/').pop())
+    path = model_path.split('/')
+    path.pop(0)
+    path.pop(-1)
     path = "/".join(path) + '/maps'
     # model_name = model.name()
 
