@@ -89,7 +89,8 @@ def train(batch_size=8,
                         metrics = [tf.keras.metrics.MeanSquaredError(),
                                    tf.keras.metrics.RootMeanSquaredError(),
                                    tf.keras.metrics.MeanAbsoluteError(),
-                                   tf.keras.metrics.MeanAbsolutePercentageError()]
+                                   get_loss('custom_loss'),
+                                   get_loss('jaccard_loss')]
                         )
           time = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
           log_dir = "/content/gag-cnn/logs/" + model_name + "/" + time

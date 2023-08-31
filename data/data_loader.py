@@ -83,6 +83,9 @@ class DataGenerator(Sequence):
 
   def __len__(self):
     return math.ceil(len(self.RGBobj_paths) / self.batch_size)
+  
+  def bs(self):
+    return self.batch_size
 
 
   def __getitem__(self, idx):
@@ -278,7 +281,7 @@ def get_loader(batch_size=8,
                             grasp_test,
                             batch_size=batch_size,
                             shape=shape,
-                            shuffle=shuffle,
+                            shuffle=False,
                             aug_p=0,
                             geo_p=0,
                             color_p=0,
