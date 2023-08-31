@@ -58,7 +58,7 @@ def take_tests(model_path, test_gen, path=None, figsize = (25,10), tests=[1, 3, 
                 plt.axis('off')
                 string = ''
                 fig, ax = plt.subplots(1)
-                im = ax.imshow(Q, alpha=1, cmap='Reds')
+                im = ax.imshow(Q_[i], alpha=1, cmap='Reds')
                 cbar = ax.figure.colorbar(im, ax = ax)
                 cbar.ax.set_ylabel("Grasp Quality", rotation = -90, va = "bottom")
                 plt.title(f"{string}")
