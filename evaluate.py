@@ -37,7 +37,7 @@ def take_tests(model_path, test_gen, figsize = (25,10), tests=[1, 3, 4]):
         S_ = test_gen.__getitem__(k)[1][2][:]
         C_ = test_gen.__getitem__(k)[1][3][:]
 
-        for i in range(0, test_gen.batch_size()):
+        for i in range(0, 15):
             
             with plt.ioff():
                 # add correct captions
