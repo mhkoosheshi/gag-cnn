@@ -45,82 +45,108 @@ def take_tests(model_path, test_gen, path=None, figsize = (25,10), tests=[1, 3, 
         for i in range(0, 15):
             
             with plt.ioff():
-                # add correct captions
-                fig = plt.figure(figsize=figsize)
-                fig.add_subplot(2, 5, 1)
+                
+                fig, axs = plt.subplots(2, 5, figsize=figsize, gridspec_kw=dict(width_ratios=[2,2,2,2,2]))
                 plt.axis('off')
-                string = ''
-                plt.title(f"{string}")
-                plt.imshow(obj[i])
+                axs[0,0].imshow(obj)
+                plt.axis('off')
+                axs[1,0].imshow(iso)
+                plt.axis('off')
+                sns.heatmap(Q_, annot=False, cmap='Reds', xticklabels=False, yticklabels=False, ax=axs[0,1], cbar=False)
+                plt.axis('off')
+                sns.heatmap(W_, annot=False, cmap='Oranges', xticklabels=False, yticklabels=False, ax=axs[0,2], cbar=False)
+                plt.axis('off')
+                sns.heatmap(S_, annot=False, cmap='Blues', xticklabels=False, yticklabels=False, ax=axs[0,3], cbar=False)
+                plt.axis('off')
+                sns.heatmap(C_, annot=False, cmap='Purples', xticklabels=False, yticklabels=False, ax=axs[0,4], cbar=False)
+                plt.axis('off')
+                sns.heatmap(Q, annot=False, cmap='Reds', xticklabels=False, yticklabels=False, ax=axs[1,1], cbar=False)
+                plt.axis('off')
+                sns.heatmap(W, annot=False, cmap='Oranges', xticklabels=False, yticklabels=False, ax=axs[1,2], cbar=False)
+                plt.axis('off')
+                sns.heatmap(S, annot=False, cmap='Blues', xticklabels=False, yticklabels=False, ax=axs[1,3], cbar=False)
+                plt.axis('off')
+                sns.heatmap(C, annot=False, cmap='Purples', xticklabels=False, yticklabels=False, ax=axs[1,4], cbar=False)
+                plt.axis('off')
 
+                plt.savefig(path+f'/test{k}_{i}.png')
+                
+                # # add correct captions
                 # fig = plt.figure(figsize=figsize)
-                fig.add_subplot(2, 5, 2)
-                plt.axis('off')
-                string = ''
-                fig, ax = plt.subplots(1)
-                im = ax.imshow(Q_[i], alpha=1, cmap='Reds')
-                cbar = ax.figure.colorbar(im, ax = ax)
-                cbar.ax.set_ylabel("Grasp Quality", rotation = -90, va = "bottom")
-                plt.title(f"{string}")
-                # sns.heatmap(Q_[i], cmap='Reds', xticklabels=False, yticklabels=False, vmin=0, vmax=1)
+                # fig.add_subplot(2, 5, 1)
+                # plt.axis('off')
+                # string = ''
+                # plt.title(f"{string}")
+                # plt.imshow(obj[i])
 
-                # fig = plt.figure(figsize=figsize)
-                fig.add_subplot(2, 5, 3)
-                plt.axis('off')
-                string = ''
-                plt.title(f"{string}")
-                sns.heatmap(W_[i], cmap='Oranges', xticklabels=False, yticklabels=False, vmin=0, vmax=1)
+                # # fig = plt.figure(figsize=figsize)
+                # fig.add_subplot(2, 5, 2)
+                # plt.axis('off')
+                # string = ''
+                # fig, ax = plt.subplots(1)
+                # im = ax.imshow(Q_[i], alpha=1, cmap='Reds')
+                # cbar = ax.figure.colorbar(im, ax = ax)
+                # cbar.ax.set_ylabel("Grasp Quality", rotation = -90, va = "bottom")
+                # plt.title(f"{string}")
+                # # sns.heatmap(Q_[i], cmap='Reds', xticklabels=False, yticklabels=False, vmin=0, vmax=1)
 
-                # fig = plt.figure(figsize=figsize)
-                fig.add_subplot(2, 5, 4)
-                plt.axis('off')
-                string = ''
-                plt.title(f"{string}")
-                sns.heatmap(S_[i], cmap='Blues', xticklabels=False, yticklabels=False, vmin=0, vmax=1)
+                # # fig = plt.figure(figsize=figsize)
+                # fig.add_subplot(2, 5, 3)
+                # plt.axis('off')
+                # string = ''
+                # plt.title(f"{string}")
+                # sns.heatmap(W_[i], cmap='Oranges', xticklabels=False, yticklabels=False, vmin=0, vmax=1)
 
-                # fig = plt.figure(figsize=figsize)
-                fig.add_subplot(2, 5, 5)
-                plt.axis('off')
-                string = ''
-                plt.title(f"{string}")
-                sns.heatmap(C_[i], cmap='Purples', xticklabels=False, yticklabels=False, vmin=0, vmax=1)
+                # # fig = plt.figure(figsize=figsize)
+                # fig.add_subplot(2, 5, 4)
+                # plt.axis('off')
+                # string = ''
+                # plt.title(f"{string}")
+                # sns.heatmap(S_[i], cmap='Blues', xticklabels=False, yticklabels=False, vmin=0, vmax=1)
 
-                # fig = plt.figure(figsize=figsize)
-                fig.add_subplot(2, 5, 6)
-                plt.axis('off')
-                string = ''
-                plt.title(f"{string}")
-                plt.imshow(iso[i])
+                # # fig = plt.figure(figsize=figsize)
+                # fig.add_subplot(2, 5, 5)
+                # plt.axis('off')
+                # string = ''
+                # plt.title(f"{string}")
+                # sns.heatmap(C_[i], cmap='Purples', xticklabels=False, yticklabels=False, vmin=0, vmax=1)
 
-                # fig = plt.figure(figsize=figsize)
-                fig.add_subplot(2, 5, 7)
-                plt.axis('off')
-                string = ''
-                plt.title(f"{string}")
-                sns.heatmap(Q[i], cmap='Reds', xticklabels=False, yticklabels=False, vmin=0, vmax=1)
+                # # fig = plt.figure(figsize=figsize)
+                # fig.add_subplot(2, 5, 6)
+                # plt.axis('off')
+                # string = ''
+                # plt.title(f"{string}")
+                # plt.imshow(iso[i])
 
-                # fig = plt.figure(figsize=figsize)
-                fig.add_subplot(2, 5, 8)
-                plt.axis('off')
-                string = ''
-                plt.title(f"{string}")
-                sns.heatmap(W[i], cmap='Oranges', xticklabels=False, yticklabels=False, vmin=0, vmax=1)
+                # # fig = plt.figure(figsize=figsize)
+                # fig.add_subplot(2, 5, 7)
+                # plt.axis('off')
+                # string = ''
+                # plt.title(f"{string}")
+                # sns.heatmap(Q[i], cmap='Reds', xticklabels=False, yticklabels=False, vmin=0, vmax=1)
 
-                # fig = plt.figure(figsize=figsize)
-                fig.add_subplot(2, 5, 9)
-                plt.axis('off')
-                string = ''
-                plt.title(f"{string}")
-                sns.heatmap(S[i], cmap='Blues', xticklabels=False, yticklabels=False, vmin=0, vmax=1)
+                # # fig = plt.figure(figsize=figsize)
+                # fig.add_subplot(2, 5, 8)
+                # plt.axis('off')
+                # string = ''
+                # plt.title(f"{string}")
+                # sns.heatmap(W[i], cmap='Oranges', xticklabels=False, yticklabels=False, vmin=0, vmax=1)
 
-                # fig = plt.figure(figsize=figsize)
-                fig.add_subplot(2, 5, 10)
-                plt.axis('off')
-                string = ''
-                plt.title(f"{string}")
-                sns.heatmap(C[i], cmap='Purples', xticklabels=False, yticklabels=False, vmin=0, vmax=1)
+                # # fig = plt.figure(figsize=figsize)
+                # fig.add_subplot(2, 5, 9)
+                # plt.axis('off')
+                # string = ''
+                # plt.title(f"{string}")
+                # sns.heatmap(S[i], cmap='Blues', xticklabels=False, yticklabels=False, vmin=0, vmax=1)
 
-                plt.savefig(path+f'/test{k}{i}.png')
+                # # fig = plt.figure(figsize=figsize)
+                # fig.add_subplot(2, 5, 10)
+                # plt.axis('off')
+                # string = ''
+                # plt.title(f"{string}")
+                # sns.heatmap(C[i], cmap='Purples', xticklabels=False, yticklabels=False, vmin=0, vmax=1)
+
+                # plt.savefig(path+f'/test{k}{i}.png')
 
 
 
