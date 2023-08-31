@@ -48,9 +48,9 @@ def take_tests(model_path, test_gen, path=None, figsize = (25,10), tests=[1, 3, 
                 
                 fig, axs = plt.subplots(2, 5, figsize=figsize, gridspec_kw=dict(width_ratios=[2,2,2,2,2]))
                 plt.axis('off')
-                axs[0,0].imshow(obj)
+                axs[0,0].imshow(obj[i])
                 plt.axis('off')
-                axs[1,0].imshow(iso)
+                axs[1,0].imshow(iso[i])
                 plt.axis('off')
                 sns.heatmap(Q_[i], annot=False, cmap='Reds', xticklabels=False, yticklabels=False, ax=axs[0,1], cbar=False)
                 plt.axis('off')
