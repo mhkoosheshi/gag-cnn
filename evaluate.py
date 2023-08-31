@@ -57,8 +57,12 @@ def take_tests(model_path, test_gen, path=None, figsize = (25,10), tests=[1, 3, 
                 fig.add_subplot(2, 5, 2)
                 plt.axis('off')
                 string = ''
+                fig, ax = plt.subplots(1)
+                im = ax.imshow(Q, alpha=1, cmap='Reds')
+                cbar = ax.figure.colorbar(im, ax = ax)
+                cbar.ax.set_ylabel("Grasp Quality", rotation = -90, va = "bottom")
                 plt.title(f"{string}")
-                sns.heatmap(Q_[i], cmap='Reds', xticklabels=False, yticklabels=False, vmin=0, vmax=np.max(Q_[i]))
+                # sns.heatmap(Q_[i], cmap='Reds', xticklabels=False, yticklabels=False, vmin=0, vmax=np.max(Q_[i]))
 
                 # fig = plt.figure(figsize=figsize)
                 fig.add_subplot(2, 5, 3)
