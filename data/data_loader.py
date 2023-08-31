@@ -239,7 +239,7 @@ def get_loader(batch_size=8,
     if aug:
         RGBobj_train, RGBiso_train, grasp_train = 2*RGBobj_train, 2*RGBiso_train, 2*grasp_train
 
-    # RGB1_test, RGB2_test, RGB3_test, grasp_test = test_path_lists(mode=mode)
+    RGBobj_test, RGBiso_test, grasp_test = test_path_lists(mode=mode)
 
     train_gen = DataGenerator(RGBobj_train,
                                 RGBiso_train, 
@@ -256,6 +256,7 @@ def get_loader(batch_size=8,
                                 crop=crop,
                                 maps=maps
                                 )
+
     val_gen = DataGenerator(RGBobj_val,
                             RGBiso_val, 
                             grasp_val,
@@ -271,5 +272,21 @@ def get_loader(batch_size=8,
                             crop=crop,
                             maps=maps
                             )
+    
+    test_gen = DataGenerator(RGBobj_test,
+                            RGBiso_test, 
+                            grasp_test,
+                            batch_size=batch_size,
+                            shape=shape,
+                            shuffle=shuffle,
+                            aug_p=0,
+                            geo_p=0,
+                            color_p=0,
+                            noise_p=0,
+                            iso_p=0,
+                            stack=stack,
+                            crop=crop,
+                            maps=maps
+                            )
 
-    return train_gen, val_gen
+    return train_gen, val_gen, test_gen
