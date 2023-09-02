@@ -77,3 +77,6 @@ def get_loss(loss_name='jaccard_loss'):
 
     elif loss_name=='custom_loss':
         return custom_loss
+
+    elif loss_name=='mae_jaccard_loss':
+        return mae_jaccard_loss
