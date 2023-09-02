@@ -12,6 +12,15 @@ def jaccard_loss(y_pred, y_true, axis=(0, 1, 2, 3), smooth=1e-5):
     jaccard = tf.reduce_mean(jaccard)
     return jaccard
 
+def mae_jaccard_loss(y_pred, y_true, axis=(0, 1, 2, 3), smooth=1e-5):
+    inse = tf.reduce_sum(tf.math.abs(y_pred - y_true), axis=axis)
+    l = tf.reduce_sum(y_pred * y_pred, axis=axis)
+    r = tf.reduce_sum(y_true * y_true, axis=axis)
+    jaccard = (inse + smooth) / (l + r - inse + smooth)
+    jaccard = tf.reduce_mean(jaccard)
+    # return inse.numpy(), l.numpy(), r.numpy()
+    return jaccard
+
 def tversky(y_true, y_pred):
     y_true_pos = K.flatten(y_true)
     y_pred_pos = K.flatten(y_pred)
