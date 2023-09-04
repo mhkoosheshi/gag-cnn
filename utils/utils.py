@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 from .maps import rect2maps, camera_calibration
+from utils.maps import rect2maps, Rotate_center, center2points
 
 def crop_object(img):
     x = img.copy()
@@ -56,3 +57,33 @@ def nearest_rect(x, y, true_grasp_path, shape=(512,512)):
     y_t = y_c + (x_t - x_c)*m_
 
     return [x_t, y_t, t, width]
+
+def nearest_rect(x, y, grasp_path, num=5, shape=(512,512)):
+
+  Q, _, _, _, _ = rect2maps(grasp_path, shape)
+
+  with open(grasp_path,"r") as f:
+        s = f.read()
+  grasp = [float(s.split(",")[i]) for i in range(0,len(s.split(",")))]
+
+  [x_c, y_c, z_c, t, w] = grasp
+  y_c = ((0.5*y_c)/512 -0.0442 - 0.125 + 0.0079 + 0.05)/0.35*shape[0]
+  x_c = ((0.5*x_c)/512 - 0.125 + 0.05)/0.35*shape[1]
+  l=15
+  l=l*(0.5/0.35)
+  xp_c, yp_c = Rotate_center(x_c, y_c, t, w)
+
+  grasps = [[xp_c, yp_c]]
+  c=(l/2)/((num-1)/2)
+  # c=l/2
+
+  for i in range(0, int((num-1)/2)):
+    grasps.append([xp_c + c*(i+1), yp_c])
+    grasps.append([xp_c - c*(i+1), yp_c])
+
+  grasps = np.array(grasps)
+  euc = np.zeros((grasps.shape[0], 1))
+  euc[:, 0] = np.sqrt((grasps[0, :]-x)*(grasps[0, :]-x) + (grasps[1, :]-y)*(grasps[1, :]-y))
+  row = (np.unravel_index(np.argmin(euc, axis=None), euc.shape))[0]
+
+  return grasps[row,0], grasps[row,1], t, w
