@@ -231,4 +231,103 @@ def rect2maps(grasp_path: str, shape=(512,512)):
 
   return Q, W, Sin, Cos, Z
 
+def Rotate_center(x_c, y_c, t, w):
+  
+  t = np.deg2rad(90-t)
+  l = 15
+  w = w/2
+  w=(w*(0.5/0.35)*105/100)
+  l=l*(0.5/0.35)
+  
+  R1 = np.array([[np.cos(t),-np.sin(t)],[np.sin(t),np.cos(t)]])
+  
+  xp_c = (np.matmul(R1, np.array([[x_c],[y_c]])))[0][0]
+  yp_c = (np.matmul(R1, np.array([[x_c],[y_c]])))[1][0]
 
+  return xp_c, yp_c
+
+def center2points(center, t, w):
+  
+  t = np.deg2rad(90-t)
+  l = 15
+  w = w/2
+  w=(w*(0.5/0.35)*105/100)
+  l=l*(0.5/0.35)
+  (xp_c, yp_c) = center
+  xp_1 = xp_c + l
+  yp_1 = yp_c - w
+  xp_2 = xp_1
+  yp_2 = yp_c + w
+  xp_3 = xp_c - l
+  yp_3 = yp_2
+  xp_4 = xp_3
+  yp_4 = yp_1
+
+  R2 = np.array([[np.cos(t),np.sin(t)],[-np.sin(t),np.cos(t)]])
+
+  x1 = int((np.matmul(R2, np.array([[xp_1],[yp_1]])))[0][0])
+  y1 = int((np.matmul(R2, np.array([[xp_1],[yp_1]])))[1][0])
+  x2 = int((np.matmul(R2, np.array([[xp_2],[yp_2]])))[0][0])
+  y2 = int((np.matmul(R2, np.array([[xp_2],[yp_2]])))[1][0])
+  x3 = int((np.matmul(R2, np.array([[xp_3],[yp_3]])))[0][0])
+  y3 = int((np.matmul(R2, np.array([[xp_3],[yp_3]])))[1][0])
+  x4 = int((np.matmul(R2, np.array([[xp_4],[yp_4]])))[0][0])
+  y4 = int((np.matmul(R2, np.array([[xp_4],[yp_4]])))[1][0])
+
+  point1 = x1,y1
+  point2 = x2,y2
+  point3 = x3,y3
+  point4 = x4,y4
+
+  return point1, point2, point3, point4
+
+def draw_multirect(image_path, grasp_path, num=5, shape=(512,512)):
+
+  x = cv2.imread(image_path)
+  x = cv2.cvtColor(x, cv2.COLOR_BGR2RGB)
+  image = x.copy()
+  Q, _, _, _, _ = rect2maps(grasp_path, (512,512))
+
+  with open(grasp_path,"r") as f:
+        s = f.read()
+  grasp = [float(s.split(",")[i]) for i in range(0,len(s.split(",")))]
+
+  if not ('obj2' in image_path):
+      grasp = camera_calibration(grasp)
+      [x_c, y_c, z_c, t, w] = grasp
+  else:
+      [x_c, y_c, z_c, t, w] = grasp
+      y_c = ((0.5*y_c)/512 -0.0442 - 0.125 + 0.0079 + 0.05)/0.35*512
+      x_c = ((0.5*x_c)/512 - 0.125 + 0.05)/0.35*512
+  l=15
+  l=l*(0.5/0.35)
+  xp_c, yp_c = Rotate_center(x_c, y_c, t, w)
+
+  grasps = [(xp_c, yp_c)]
+  c=(l/2)/((num-1)/2)
+  # c=l/2
+
+  for i in range(0, int((num-1)/2)):
+    grasps.append((xp_c + c*(i+1), yp_c))
+    grasps.append((xp_c - c*(i+1), yp_c))
+
+  
+  # for center in [grasps[1], grasps[-1]]:
+  for center in grasps:
+  # for center in [grasps[0]]:
+    point1, point2, point3, point4 = center2points(center, t, w)
+    color1 = (0,0,200)
+    color2 = (200,0,0)
+    thickness = 1
+    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+
+    image = cv2.line(image, point1, point2, color1, thickness)
+    image = cv2.line(image, point3, point4, color1, thickness)
+    image = cv2.line(image, point2, point3, color2, thickness)
+    image = cv2.line(image, point4, point1, color2, thickness)
+    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+
+  plt.axis('off')
+  plt.imshow(image, alpha=1)
+  plt.imshow(Q, cmap='gray', alpha=0.3)
+  plt.show()
