@@ -46,6 +46,14 @@ def custom_loss(y_true, y_pred):
 
     return loss
 
+def combined_loss(y_true, y_pred):
+    
+    alpha = 0.5
+    mse = tf.keras.losses.MeanSquaredError()
+    loss = alpha * mse(y_true, y_pred) + (1-alpha)*jaccard_loss(y_pred, y_true)
+
+    return loss
+
 def get_loss(loss_name='jaccard_loss'):
 
     if loss_name=='jaccard_loss':
