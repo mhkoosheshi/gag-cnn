@@ -88,3 +88,6 @@ def get_loss(loss_name='jaccard_loss'):
 
     elif loss_name=='mae_jaccard_loss':
         return mae_jaccard_loss
+
+    elif loss_name=='combined_loss':
+        return combined_loss
