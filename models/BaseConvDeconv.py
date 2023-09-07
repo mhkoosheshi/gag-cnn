@@ -197,3 +197,194 @@ def Backbone(input, shape=(512,512,3)):
     x = Activation('relu')(x)
     x = MaxPool2D(pool_size=(2,2))(x)
     return x
+
+
+#########################################################
+
+class GAG_CNN():
+
+    def __init__(self, shape=(256,256,3), init="glorot_uniform", bias=False, activation="relu"):
+        self.shape = shape
+        self.init = init
+        self.bias = bias
+        self.activation = activation
+
+    def get_model(self):
+        # obj input
+        input1 = layers.Input(shape=self.shape)
+        # iso input
+        input2 = layers.Input(shape=self.shape)
+
+        backbone = Backbone(input2, shape=self.shape, init=self.init, bias=self.bias, activation=self.activation)
+        encoder2 = Head(backbone, init=self.init, activation=self.activation)
+        out = encoderdecoder(input1, encoder2, init=self.init, activation=self.activation, bias=self.bias)
+
+        model = Model(inputs=[input1, input2], outputs=[out], name='GAGCNN')
+
+        return model
+
+
+
+def Head(input, init="glorot_uniform", activation="relu"):
+    x = input
+    x = Conv2D(128, (3, 3), padding='same', kernel_initializer=init)(x)
+    x = BatchNormalization()(x)
+    x = Activation(activation)(x)
+    x = Conv2D(64, (3, 3), padding='same', kernel_initializer=init)(x)
+    x = BatchNormalization()(x)
+    x = Activation(activation)(x)
+    x = Conv2D(32, (3, 3), padding='same', kernel_initializer=init)(x)
+    x = BatchNormalization()(x)
+    x = Activation(activation)(x)
+    return x
+
+def encoderdecoder(x, features, init="glorot_uniform", bias=False, activation="relu"):
+
+    x = Conv2D(16, (3, 3), strides=1, padding='same', kernel_initializer=init, use_bias=bias)(x)
+    x = BatchNormalization()(x)
+    x = Activation(activation)(x)
+    x = Conv2D(16, (3, 3), strides=1, padding='same', kernel_initializer=init, use_bias=bias)(x)
+    x = BatchNormalization()(x)
+    x = Activation(activation)(x)
+    x = MaxPool2D(pool_size=(2,2))(x)
+
+    x = Conv2D(32, (3, 3), strides=1, padding='same', kernel_initializer=init, use_bias=bias)(x)
+    x = BatchNormalization()(x)
+    x = Activation(activation)(x)
+    x = Conv2D(32, (3, 3), strides=1, padding='same', kernel_initializer=init, use_bias=bias)(x)
+    x = BatchNormalization()(x)
+    x = Activation(activation)(x)
+    x = MaxPool2D(pool_size=(2,2))(x)
+
+    x = Conv2D(64, (3, 3), strides=1, padding='same', kernel_initializer=init, use_bias=bias)(x)
+    x = BatchNormalization()(x)
+    x = Activation(activation)(x)
+    x = Conv2D(64, (3, 3), strides=1, padding='same', kernel_initializer=init, use_bias=bias)(x)
+    x = BatchNormalization()(x)
+    x = Activation(activation)(x)
+    x = MaxPool2D(pool_size=(2,2))(x)
+
+    x = Conv2D(128, (3, 3), strides=1, padding='same', kernel_initializer=init, use_bias=bias)(x)
+    x = BatchNormalization()(x)
+    x = Activation(activation)(x)
+    x = Conv2D(128, (3, 3), strides=1, padding='same', kernel_initializer=init, use_bias=bias)(x)
+    x = BatchNormalization()(x)
+    x = Activation(activation)(x)
+    x = MaxPool2D(pool_size=(2,2))(x)
+
+    x = Conv2D(128, (3, 3), strides=1, padding='same', kernel_initializer=init, use_bias=bias)(x)
+    x = BatchNormalization()(x)
+    x = Activation(activation)(x)
+    x = Conv2D(128, (3, 3), strides=1, padding='same', kernel_initializer=init, use_bias=bias)(x)
+    x = BatchNormalization()(x)
+    x = Activation(activation)(x)
+    x = MaxPool2D(pool_size=(2,2))(x)
+
+
+    x = layers.concatenatecnct = layers.concatenate([x, features])
+    x = Conv2D(256, (3, 3), padding='same', kernel_initializer=init, use_bias=bias)(x)
+    x = BatchNormalization()(x)
+    x = Activation(activation)(x)
+    x = Conv2D(256, (3, 3), padding='same', kernel_initializer=init, use_bias=bias)(x)
+    x = BatchNormalization()(x)
+    x = Activation(activation)(x)
+    x = Conv2DTranspose(256, (3, 3), strides=2, padding='same', kernel_initializer=init, use_bias=bias)(x)
+
+    x = Conv2D(128, (3, 3), padding='same', kernel_initializer=init, use_bias=bias)(x)
+    x = BatchNormalization()(x)
+    x = Activation(activation)(x)
+    x = Conv2D(128, (3, 3), padding='same', kernel_initializer=init, use_bias=bias)(x)
+    x = BatchNormalization()(x)
+    x = Activation(activation)(x)
+    x = Conv2DTranspose(128, (3, 3), strides=2, padding='same', kernel_initializer=init, use_bias=bias)(x)
+
+    x = Conv2D(64, (3, 3), padding='same', kernel_initializer=init, use_bias=bias)(x)
+    x = BatchNormalization()(x)
+    x = Activation(activation)(x)
+    x = Conv2D(64, (3, 3), padding='same', kernel_initializer=init, use_bias=bias)(x)
+    x = BatchNormalization()(x)
+    x = Activation(activation)(x)
+    x = Conv2DTranspose(64, (3, 3), strides=2, padding='same', kernel_initializer=init, use_bias=bias)(x)
+
+    x = Conv2D(32, (3, 3), padding='same', kernel_initializer=init, use_bias=bias)(x)
+    x = BatchNormalization()(x)
+    x = Activation(activation)(x)
+    x = Conv2D(32, (3, 3), padding='same', kernel_initializer=init, use_bias=bias)(x)
+    x = BatchNormalization()(x)
+    x = Activation(activation)(x)
+    x = Conv2DTranspose(32, (3, 3), strides=2, padding='same', kernel_initializer=init, use_bias=bias)(x)
+
+    x = Conv2D(16, (3, 3), padding='same', kernel_initializer=init, use_bias=bias)(x)
+    x = BatchNormalization()(x)
+    x = Activation(activation)(x)
+    x = Conv2D(16, (3, 3), padding='same', kernel_initializer=init, use_bias=bias)(x)
+    x = BatchNormalization()(x)
+    x = Activation(activation)(x)
+    x = Conv2DTranspose(16, (3, 3), strides=2, padding='same', kernel_initializer=init, use_bias=bias)(x)
+    x = Conv2D(16, (3, 3), padding='same', kernel_initializer=init, use_bias=bias)(x)
+    x = BatchNormalization()(x)
+    x = Activation(activation)(x)
+    x = Conv2D(8, (3, 3), padding='same', kernel_initializer=init, use_bias=bias)(x)
+    x = BatchNormalization()(x)
+    x = Activation(activation)(x)
+    x = Conv2D(8, (3, 3), padding='same', kernel_initializer=init, use_bias=bias)(x)
+    x = BatchNormalization()(x)
+    x = Activation(activation)(x)
+    x = Conv2D(4, (1,1), activation='sigmoid', padding='same',
+              #  kernel_initializer=init,
+               kernel_initializer=tf.keras.initializers.RandomUniform(minval=0, maxval=1, seed=42),
+               use_bias=bias)(x)
+
+    return x
+
+def Backbone(x, shape=(512,512,3), init="glorot_uniform", bias=False, activation="relu"):
+
+    x = Conv2D(16, (3, 3), strides=1, padding='same', kernel_initializer=init, use_bias=bias)(x)
+    x = BatchNormalization()(x)
+    x = Activation(activation)(x)
+    x = Conv2D(16, (3, 3), strides=1, padding='same', kernel_initializer=init, use_bias=bias)(x)
+    x = BatchNormalization()(x)
+    x = Activation(activation)(x)
+    x = MaxPool2D(pool_size=(2,2))(x)
+
+    x = Conv2D(32, (3, 3), strides=1, padding='same', kernel_initializer=init, use_bias=bias)(x)
+    x = BatchNormalization()(x)
+    x = Activation(activation)(x)
+    x = Conv2D(32, (3, 3), strides=1, padding='same', kernel_initializer=init, use_bias=bias)(x)
+    x = BatchNormalization()(x)
+    x = Activation(activation)(x)
+    x = MaxPool2D(pool_size=(2,2))(x)
+
+    x = Conv2D(64, (3, 3), strides=1, padding='same', kernel_initializer=init, use_bias=bias)(x)
+    x = BatchNormalization()(x)
+    x = Activation(activation)(x)
+    x = Conv2D(64, (3, 3), strides=1, padding='same', kernel_initializer=init, use_bias=bias)(x)
+    x = BatchNormalization()(x)
+    x = Activation(activation)(x)
+    # x = Conv2D(64, (3, 3), strides=1, padding='same', kernel_initializer=init, use_bias=bias)(x)
+    # x = BatchNormalization()(x)
+    # x = Activation(activation)(x)
+    x = MaxPool2D(pool_size=(2,2))(x)
+
+    x = Conv2D(128, (3, 3), strides=1, padding='same', kernel_initializer=init, use_bias=bias)(x)
+    x = BatchNormalization()(x)
+    x = Activation(activation)(x)
+    x = Conv2D(128, (3, 3), strides=1, padding='same', kernel_initializer=init, use_bias=bias)(x)
+    x = BatchNormalization()(x)
+    x = Activation(activation)(x)
+    # x = Conv2D(128, (3, 3), strides=1, padding='same', kernel_initializer=init, use_bias=bias)(x)
+    # x = BatchNormalization()(x)
+    # x = Activation(activation)(x)
+    x = MaxPool2D(pool_size=(2,2))(x)
+
+    x = Conv2D(256, (3, 3), strides=1, padding='same', kernel_initializer=init, use_bias=bias)(x)
+    x = BatchNormalization()(x)
+    x = Activation(activation)(x)
+    x = Conv2D(256, (3, 3), strides=1, padding='same', kernel_initializer=init, use_bias=bias)(x)
+    x = BatchNormalization()(x)
+    x = Activation(activation)(x)
+    # x = Conv2D(256, (3, 3), strides=1, padding='same', kernel_initializer=init, use_bias=bias)(x)
+    # x = BatchNormalization()(x)
+    # x = Activation(activation)(x)
+    x = MaxPool2D(pool_size=(2,2))(x)
+    return x
