@@ -61,8 +61,11 @@ def get_loss(loss_name='jaccard_loss'):
 
     elif loss_name=='mse_loss':
         return tf.keras.losses.MeanSquaredError()
+
+    elif loss_name=='mse_loss_sumreduction':
         # return tf.keras.losses.MeanSquaredError(reduction=tf.keras.losses.Reduction.SUM)/(256*256)
-    
+        return tf.keras.losses.MeanSquaredError(reduction=tf.keras.losses.Reduction.SUM)
+
     elif loss_name=='mae_loss':
         return tf.keras.losses.MeanAbsoluteError()
 
