@@ -3,6 +3,7 @@ from tensorflow import keras
 from tensorflow.keras import layers
 from tensorflow.keras.layers import Add, Conv2DTranspose, Conv2D, MaxPool2D, BatchNormalization, Dropout, SeparableConv2D, Activation, UpSampling2D
 from tensorflow.keras.models import Model
+from .cbam import cbam_block
 
 def Conv(input, filters, pool=False, activation="relu", bias=True, init='glorot_uniform', bn=True):
     x = input
@@ -28,6 +29,15 @@ def ResConv(input, filters, activation="relu", bias=True, init='glorot_uniform',
     x = Conv(input, filters, pool=False, activation=activation, bias=bias, init=init, bn=bn)
     x = Conv(x, filters, pool=False, activation=activation, bias=bias, init=init, bn=bn)
     x_skip = input
+    x = Add()([x, x_skip])
+    # x = Activation(activation)(x)
+    return x
+
+def ResConvCBAM(input, filters, activation="relu", bias=True, init='glorot_uniform', bn=True):
+    x = Conv(input, filters, pool=False, activation=activation, bias=bias, init=init, bn=bn)
+    x = Conv(x, filters, pool=False, activation=activation, bias=bias, init=init, bn=bn)
+    x_skip = input
+    x_skip = cbam_block(x_skip)
     x = Add()([x, x_skip])
     # x = Activation(activation)(x)
     return x
