@@ -38,6 +38,7 @@ def ResConvCBAM(input, filters, activation="relu", bias=True, init='glorot_unifo
     x = Conv(x, filters, pool=False, activation=activation, bias=bias, init=init, bn=bn)
     x_skip = input
     x_skip = cbam_block(x_skip)
+    x_skip = Conv2D(filters, (3,3), strides=1, padding='same', kernel_initializer=init, use_bias=bias)
     x = Add()([x, x_skip])
     # x = Activation(activation)(x)
     return x
