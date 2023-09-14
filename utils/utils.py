@@ -38,25 +38,25 @@ def crop_maps(map, crop_params):
     map1 = map[y0:y0+h0,x0:x0+w0]
     return map1
 
-def nearest_rect(x, y, true_grasp_path, shape=(512,512)):
+# def nearest_rect(x, y, true_grasp_path, shape=(512,512)):
     
-    Q, _, _, _, _ = rect2maps(true_grasp_path, shape=shape)
-    with open(true_grasp_path,"r") as f:
-        s = f.read()
-    grasp = [float(s.split(",")[i]) for i in range(0,len(s.split(",")))]
-    grasp = camera_calibration(grasp, shape=shape)
-    [x_c, y_c, _, t, width] = grasp
+#     Q, _, _, _, _ = rect2maps(true_grasp_path, shape=shape)
+#     with open(true_grasp_path,"r") as f:
+#         s = f.read()
+#     grasp = [float(s.split(",")[i]) for i in range(0,len(s.split(",")))]
+#     grasp = camera_calibration(grasp, shape=shape)
+#     [x_c, y_c, _, t, width] = grasp
 
-    X = shape[0]
-    Y = shape[1]
+#     X = shape[0]
+#     Y = shape[1]
 
-    m = np.tan(t*np.pi/180)
-    m_ = np.tan((t*np.pi/180)+(np.pi)/2)
+#     m = np.tan(t*np.pi/180)
+#     m_ = np.tan((t*np.pi/180)+(np.pi)/2)
 
-    x_t = (y_c - y - m*x_c + m_*x)/(m_ - m)
-    y_t = y_c + (x_t - x_c)*m_
+#     x_t = (y_c - y - m*x_c + m_*x)/(m_ - m)
+#     y_t = y_c + (x_t - x_c)*m_
 
-    return [x_t, y_t, t, width]
+#     return [x_t, y_t, t, width]
 
 def nearest_rect(x, y, grasp_path, num=5, shape=(512,512)):
 

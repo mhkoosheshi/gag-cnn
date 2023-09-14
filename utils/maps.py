@@ -281,7 +281,7 @@ def center2points(center, t, w):
 
   return point1, point2, point3, point4
 
-def draw_multirect(image_path, grasp_path, num=5, shape=(512,512)):
+def draw_multirect(image_path, grasp_path, l=15, num=5, shape=(512,512)):
 
   x = cv2.imread(image_path)
   x = cv2.cvtColor(x, cv2.COLOR_BGR2RGB)
@@ -299,7 +299,6 @@ def draw_multirect(image_path, grasp_path, num=5, shape=(512,512)):
       [x_c, y_c, z_c, t, w] = grasp
       y_c = ((0.5*y_c)/512 -0.0442 - 0.125 + 0.0079 + 0.05)/0.35*512
       x_c = ((0.5*x_c)/512 - 0.125 + 0.05)/0.35*512
-  l=15
   l=l*(0.5/0.35)
   xp_c, yp_c = Rotate_center(x_c, y_c, t, w)
 
