@@ -105,14 +105,14 @@ def rect2points(rectangle, shape=(512,512)):
     xp_4 = xp_3
     yp_4 = yp_1
 
-    x1 = (np.matmul(R2, np.array([[xp_1],[yp_1]])))[0][0]
-    y1 = (np.matmul(R2, np.array([[xp_1],[yp_1]])))[1][0]
-    x2 = (np.matmul(R2, np.array([[xp_2],[yp_2]])))[0][0]
-    y2 = (np.matmul(R2, np.array([[xp_2],[yp_2]])))[1][0]
-    x3 = (np.matmul(R2, np.array([[xp_3],[yp_3]])))[0][0]
-    y3 = (np.matmul(R2, np.array([[xp_3],[yp_3]])))[1][0]
-    x4 = (np.matmul(R2, np.array([[xp_4],[yp_4]])))[0][0]
-    y4 = (np.matmul(R2, np.array([[xp_4],[yp_4]])))[1][0]
+    x1 = int((np.matmul(R2, np.array([[xp_1],[yp_1]])))[0][0])
+    y1 = int((np.matmul(R2, np.array([[xp_1],[yp_1]])))[1][0])
+    x2 = int((np.matmul(R2, np.array([[xp_2],[yp_2]])))[0][0])
+    y2 = int((np.matmul(R2, np.array([[xp_2],[yp_2]])))[1][0])
+    x3 = int((np.matmul(R2, np.array([[xp_3],[yp_3]])))[0][0])
+    y3 = int((np.matmul(R2, np.array([[xp_3],[yp_3]])))[1][0])
+    x4 = int((np.matmul(R2, np.array([[xp_4],[yp_4]])))[0][0])
+    y4 = int((np.matmul(R2, np.array([[xp_4],[yp_4]])))[1][0])
 
     point1 = (x1,y1)
     point2 = (x2,y2)
