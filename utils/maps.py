@@ -73,7 +73,7 @@ def draw_grasp(image_path: str, grasp_path:str, shape=(512,512)):
     plt.show()
     plt.imshow(image)
 
-def rect2points(rectangle, shape=(512,512)):
+def rect2points(rectangle, l=15, shape=(512,512)):
 
     [x, y, z, t, w] = rectangle
 
@@ -83,7 +83,7 @@ def rect2points(rectangle, shape=(512,512)):
     x_c = x
     y_c = y
     t = np.deg2rad(90-t)
-    l = 15
+    l = l
     # w = w/2
 
     l = 15
