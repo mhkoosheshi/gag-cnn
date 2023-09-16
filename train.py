@@ -40,7 +40,7 @@ def train(batch_size=8,
           lr_scheduler=None
           ):
           
-          train_gen, val_gen, _= get_loader(batch_size=batch_size,
+          train_gen, val_gen, test_gen= get_loader(batch_size=batch_size,
                                             mode='rgb',
                                             shape=shape,
                                             shuffle=True,
@@ -56,6 +56,10 @@ def train(batch_size=8,
                                             crop=crop,
                                             maps=maps,
                                             dataset_factor=dataset_factor)
+          
+          if train_val_factor == 0:
+            val_gen = test_gen
+          
           if type(model)=='str':
               model = MODELS[model](shape=shape).get_model()
               model_name = model
