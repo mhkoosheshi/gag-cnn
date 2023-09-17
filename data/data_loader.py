@@ -179,12 +179,12 @@ class DataGenerator(Sequence):
           rnd = rnd - 1
           img = (rnd)*(255 - img) + (1-rnd)*img
         
-        elif self.mode == 'd':
-          img = ImageToFloatArray(RGBiso_path)
-          pimg = (Image.fromarray(img)).resize((self.shape[0], self.shape[1]))
-          img = np.asarray(pimg)
-          # img = np.float32(img)
-          img = np.stack([img, img, img], axis=-1)
+      elif self.mode == 'd':
+        img = ImageToFloatArray(RGBiso_path)
+        # pimg = (Image.fromarray(img)).resize((self.shape[0], self.shape[1]))
+        # img = np.asarray(pimg)
+        # img = np.float32(img)
+        img = np.stack([img, img, img], axis=-1)
 
       # img = np.float32(img)
       rgbiso.append(img)

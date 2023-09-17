@@ -39,7 +39,7 @@ def train_path_lists(mode='rgb'):
     return rgb_obj, rgb_iso, d_obj, d_iso, grasps
 
   elif mode=='d':
-    return d_obj, d_iso, grasps
+    return rgb_obj, d_iso, grasps
 
 def test_path_lists(mode='rgb'):
 
