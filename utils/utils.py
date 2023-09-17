@@ -87,3 +87,27 @@ def nearest_rect(x, y, grasp_path, num=5, shape=(512,512)):
   row = (np.unravel_index(np.argmin(euc, axis=None), euc.shape))[0]
 
   return grasps[row,0], grasps[row,1], t, w
+
+def ImageToFloatArray(path, scale_factor=None):
+    DEFAULT_RGB_SCALE_FACTOR = 256000.0
+    DEFAULT_GRAY_SCALE_FACTOR = {np.uint8: 100.0,
+                                 np.uint16: 1000.0,
+                                 np.int32: DEFAULT_RGB_SCALE_FACTOR}
+    image = cv2.imread(r"{}".format(path))
+    image_array = np.array(image)
+    image_dtype = image_array.dtype
+    image_shape = image_array.shape
+
+    channels = image_shape[2] if len(image_shape) > 2 else 1
+    assert 2 <= len(image_shape) <= 3
+    if channels == 3:
+        # RGB image needs to be converted to 24 bit integer.
+        float_array = np.sum(image_array * [65536, 256, 1], axis=2)
+        if scale_factor is None:
+            scale_factor = DEFAULT_RGB_SCALE_FACTOR
+    else:
+        if scale_factor is None:
+            scale_factor = DEFAULT_GRAY_SCALE_FACTOR[image_dtype.type]
+        float_array = image_array.astype(np.float32)
+    scaled_array = float_array / scale_factor
+    return scaled_array

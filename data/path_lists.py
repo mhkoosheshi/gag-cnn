@@ -35,6 +35,12 @@ def train_path_lists(mode='rgb'):
   if mode=='rgb':
     return rgb_obj, rgb_iso, grasps
 
+  elif mode=='rgbd':
+    return rgb_obj, rgb_iso, d_obj, d_iso, grasps
+
+  elif mode=='d':
+    return d_obj, d_iso, grasps
+
 def test_path_lists(mode='rgb'):
 
   grasps = []
@@ -64,6 +70,12 @@ def test_path_lists(mode='rgb'):
 
   if mode=='rgb':
     return rgb_obj, rgb_iso, grasps
+  
+  elif mode=='rgbd':
+    return rgb_obj, rgb_iso, d_iso, grasps
+
+  elif mode=='d':
+    return rgb_obj, d_iso, grasps
 
 def unison_shuffle(a, b, c, d=None):
   

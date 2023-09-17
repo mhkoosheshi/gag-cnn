@@ -10,7 +10,7 @@ from tensorflow.keras.utils import Sequence
 from data.path_lists import train_path_lists, test_path_lists, unison_shuffle
 import albumentations as A
 from utils.maps import rect2maps
-from utils.utils import crop_object, crop_maps
+from utils.utils import crop_object, crop_maps, ImageToFloatArray
 
 class DataGenerator(Sequence):
   '''
@@ -25,6 +25,7 @@ class DataGenerator(Sequence):
               batch_size=8,
               shape=(224,224),
               shuffle=True,
+              mode='rgb',
               aug_p=0.7,
               geo_p=0.5,
               color_p=0.5,
@@ -46,6 +47,7 @@ class DataGenerator(Sequence):
     self.stack = stack
     self.crop = crop
     self.maps = maps
+    self.mode = mode
 
     self.geo = A.Compose([
       A.HorizontalFlip(p=0.5)
@@ -159,29 +161,40 @@ class DataGenerator(Sequence):
 
 
       # RGB2 data
-      img = cv2.cvtColor(cv2.imread(RGBiso_path), cv2.COLOR_BGR2RGB)
-      pimg = (Image.fromarray(img)).resize((self.shape[0], self.shape[1]))
-      img = np.asarray(pimg)
-      # img = np.float32(img)
-      img = img
-      
-      if self.aug_p !=0:
-        rnd = random.randint(1,2)
-        rnd = rnd - 1
-        img = (rnd)*(255 - img) + (1-rnd)*img
-        random.seed(a)
-        transformed = self.transform(image=img)['image']
-        img = transformed
-        rnd = random.randint(1,2)
-        rnd = rnd - 1
-        img = (rnd)*(255 - img) + (1-rnd)*img
+      if self.mode=='rgb':
+        img = cv2.cvtColor(cv2.imread(RGBiso_path), cv2.COLOR_BGR2RGB)
+        pimg = (Image.fromarray(img)).resize((self.shape[0], self.shape[1]))
+        img = np.asarray(pimg)
+        # img = np.float32(img)
+        img = img
+        
+        if self.aug_p !=0:
+          rnd = random.randint(1,2)
+          rnd = rnd - 1
+          img = (rnd)*(255 - img) + (1-rnd)*img
+          random.seed(a)
+          transformed = self.transform(image=img)['image']
+          img = transformed
+          rnd = random.randint(1,2)
+          rnd = rnd - 1
+          img = (rnd)*(255 - img) + (1-rnd)*img
+        
+        elif self.mode == 'd':
+          img = ImageToFloatArray(RGBiso_path)
+          pimg = (Image.fromarray(img)).resize((self.shape[0], self.shape[1]))
+          img = np.asarray(pimg)
+          # img = np.float32(img)
+          img = np.stack([img, img, img], axis=-1)
 
       # img = np.float32(img)
       rgbiso.append(img)
       # print(a)
 
     rgbobj = (np.array(rgbobj))/255
-    rgbiso = (np.array(rgbiso))/255
+    if self.mode=='rgb':
+      rgbiso = (np.array(rgbiso))/255
+    elif self.mode=='d':
+      rgbiso = (np.array(rgbiso))/22
     Qmaps = np.array(Qmaps)
     Wmaps = np.array(Wmaps)
     Sinmaps = np.array(Sinmaps)
@@ -228,7 +241,7 @@ def get_loader(batch_size=8,
               crop=False,
               dataset_factor=1.0,
               maps=None):
-    # currently only for rgb
+    # currently only for rgb and d
     RGBobj_paths, RGBiso_paths, grasp_paths = train_path_lists(mode=mode)
     n = len(RGBobj_paths)
     RGBobj_paths, RGBiso_paths, grasp_paths = np.array(RGBobj_paths), np.array(RGBiso_paths), np.array(grasp_paths)
