@@ -37,11 +37,12 @@ def train(batch_size=8,
           crop = False,
           maps=None,
           dataset_factor=1.0,
-          lr_scheduler=None
+          lr_scheduler=None,
+          mode='rgb'
           ):
           
           train_gen, val_gen, test_gen= get_loader(batch_size=batch_size,
-                                            mode='rgb',
+                                            mode=mode,
                                             shape=shape,
                                             shuffle=True,
                                             factor=train_val_factor,
