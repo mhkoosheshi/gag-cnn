@@ -181,8 +181,8 @@ class DataGenerator(Sequence):
         
       elif self.mode == 'd':
         img = ImageToFloatArray(RGBiso_path)
-        # pimg = (Image.fromarray(img)).resize((self.shape[0], self.shape[1]))
-        # img = np.asarray(pimg)
+        pimg = (Image.fromarray(img)).resize((self.shape[0], self.shape[1]))
+        img = np.asarray(pimg)
         # img = np.float32(img)
         img = np.stack([img, img, img], axis=-1)
 
