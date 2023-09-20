@@ -5,9 +5,12 @@ import numpy as np
 
 
 def jaccard_loss(y_pred, y_true, axis=(0, 1, 2, 3), smooth=1e-5):
-    inse = tf.reduce_sum(y_pred * y_true, axis=axis)
-    l = tf.reduce_sum(y_pred * y_pred, axis=axis)
-    r = tf.reduce_sum(y_true * y_true, axis=axis)
+    # inse = tf.reduce_sum(y_pred * y_true, axis=axis)
+    # l = tf.reduce_sum(y_pred * y_pred, axis=axis)
+    # r = tf.reduce_sum(y_true * y_true, axis=axis)
+    inse = tf.reduce_sum(y_pred * y_true, axis=-1)
+    l = tf.reduce_sum(y_pred * y_pred, axis=-1)
+    r = tf.reduce_sum(y_true * y_true, axis=-1)
     jaccard = 1 - (inse + smooth) / (l + r - inse + smooth)
     jaccard = tf.reduce_mean(jaccard)
     return jaccard
