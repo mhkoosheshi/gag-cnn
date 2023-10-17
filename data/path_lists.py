@@ -2,7 +2,7 @@ import numpy as np
 import glob
 
 
-def train_path_lists(mode='rgb'):
+def train_path_lists(mode='rgb', iso_num=1):
   '''
   mode : 'rgb' or 'rgbd' or 'd'
   '''
@@ -11,6 +11,8 @@ def train_path_lists(mode='rgb'):
   d_obj = []
   rgb_iso = []
   d_iso = []
+  rgb_iso2 = []
+  rgb_iso3 = []
   
   for c, grasp_path in enumerate(glob.glob("/content/drive/MyDrive/AppGraD/grasp/grasp*.txt")):
       grasps.append(grasp_path)
@@ -18,6 +20,10 @@ def train_path_lists(mode='rgb'):
       rgb_obj.append(im_path)
   for im_path in glob.glob(f"/content/drive/MyDrive/AppGraD/vs10/rgb*.png"):
       rgb_iso.append(im_path)
+  for im_path in glob.glob(f"/content/drive/MyDrive/AppGraD/vs11/rgb*.png"):
+      rgb_iso2.append(im_path)
+  for im_path in glob.glob(f"/content/drive/MyDrive/AppGraD/vs12/rgb*.png"):
+      rgb_iso3.append(im_path)
   
   
   if 'd' in mode:
@@ -30,24 +36,35 @@ def train_path_lists(mode='rgb'):
   rgb_obj = sorted(rgb_obj)
   d_obj = sorted(d_obj)
   rgb_iso = sorted(rgb_iso)
+  rgb_iso2 = sorted(rgb_iso2)
+  rgb_iso3 = sorted(rgb_iso3)
   d_iso = sorted(d_iso)
 
-  if mode=='rgb':
-    return rgb_obj, rgb_iso, grasps
+  if iso_num==1:
+    if mode=='rgb':
+      return rgb_obj, rgb_iso, grasps
 
-  elif mode=='rgbd':
-    return rgb_obj, rgb_iso, d_obj, d_iso, grasps
+    elif mode=='rgbd':
+      return rgb_obj, rgb_iso, d_obj, d_iso, grasps
 
-  elif mode=='d':
-    return rgb_obj, d_iso, grasps
+    elif mode=='d':
+      return rgb_obj, d_iso, grasps
+  
+  elif iso_num==2:
+      return rgb_obj, rgb_iso, rgb_iso2, grasps
 
-def test_path_lists(mode='rgb'):
+  elif iso_num==3:
+      return rgb_obj, rgb_iso, rgb_iso2, rgb_iso3, grasps
+
+def test_path_lists(mode='rgb', iso_num=1):
 
   grasps = []
   rgb_obj = []
   d_obj = []
   rgb_iso = []
   d_iso = []
+  rgb_iso2 = []
+  rgb_iso3 = []
   
   for c, grasp_path in enumerate(glob.glob("/content/drive/MyDrive/gag-cnn/test/grasp/grasp*.txt")):
       grasps.append(grasp_path)
@@ -55,6 +72,10 @@ def test_path_lists(mode='rgb'):
       rgb_obj.append(im_path)
   for im_path in glob.glob(f"/content/drive/MyDrive/gag-cnn/test/vs10/rgb*.png"):
       rgb_iso.append(im_path)
+  for im_path in glob.glob(f"/content/drive/MyDrive/gag-cnn/test/vs11/rgb*.png"):
+      rgb_iso2.append(im_path)
+  for im_path in glob.glob(f"/content/drive/MyDrive/gag-cnn/test/vs12/rgb*.png"):
+      rgb_iso3.append(im_path)
   
   if 'd' in mode:
     for d_path in glob.glob(f"/content/drive/MyDrive/gag-cnn/test/vs10/d*.png"):
@@ -66,16 +87,21 @@ def test_path_lists(mode='rgb'):
   rgb_obj = sorted(rgb_obj)
   d_obj = sorted(d_obj)
   rgb_iso = sorted(rgb_iso)
+  rgb_iso2 = sorted(rgb_iso2)
+  rgb_iso3 = sorted(rgb_iso3)
   d_iso = sorted(d_iso)
+  if iso_num==1:
+    if mode=='rgb':
+      return rgb_obj, rgb_iso, grasps
+    
+    elif mode=='rgbd':
+      return rgb_obj, rgb_iso, d_iso, grasps
 
-  if mode=='rgb':
-    return rgb_obj, rgb_iso, grasps
-  
-  elif mode=='rgbd':
-    return rgb_obj, rgb_iso, d_iso, grasps
+    elif mode=='d':
+      return rgb_obj, d_iso, grasps
 
-  elif mode=='d':
-    return rgb_obj, d_iso, grasps
+  elif iso_num==2:
+    return rgb_obj, rgb_iso, rgb_iso2, grasps
 
 def unison_shuffle(a, b, c, d=None):
   

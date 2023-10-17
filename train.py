@@ -38,7 +38,8 @@ def train(batch_size=8,
           maps=None,
           dataset_factor=1.0,
           lr_scheduler=None,
-          mode='rgb'
+          mode='rgb',
+          iso_num=1,
           ):
           
           train_gen, val_gen, test_gen= get_loader(batch_size=batch_size,
@@ -56,7 +57,8 @@ def train(batch_size=8,
                                             stack=stack,
                                             crop=crop,
                                             maps=maps,
-                                            dataset_factor=dataset_factor)
+                                            dataset_factor=dataset_factor,
+                                            iso_num=iso_num)
           
           if train_val_factor == 0:
             val_gen = test_gen
