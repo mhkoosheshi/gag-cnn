@@ -417,7 +417,7 @@ class DataGenerator2(Sequence):
     rgbobj = (np.array(rgbobj))/255
     if self.mode=='rgb':
       rgbiso = (np.array(rgbiso))/255
-      rgbiso2 = (np.array(rgbiso))/255
+      rgbiso2 = (np.array(rgbiso2))/255
     elif self.mode=='d':
       rgbiso = (np.array(rgbiso))/22
     Qmaps = np.array(Qmaps)
