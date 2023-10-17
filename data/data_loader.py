@@ -293,9 +293,9 @@ class DataGenerator2(Sequence):
   def on_epoch_end(self):
     if self.shuffle:
       ind = np.random.permutation(len(self.RGBobj_paths)).astype(np.int64)
-      self.RGBobj_paths, self.RGBiso_paths, self.RGBiso2_paths,  self.grasp_paths = np.array(self.RGBobj_paths), np.array(self.RGBiso_paths), np.array(self.RGBiso2_paths), np.array(self.grasp_paths)
-      self.RGBobj_paths, self.RGBiso_paths, self.RGBiso2_paths, self.grasp_paths = self.RGBobj_paths[ind], self.RGBiso_paths[ind], self.RGBiso2_paths[ind], self.grasp_paths[ind]
-      self.RGBobj_paths, self.RGBiso_paths, self.RGBiso2_paths, self.grasp_paths = list(self.RGBobj_paths), list(self.RGBiso_paths), list(self.RGBiso2_paths), list(self.grasp_paths)
+      self.RGBobj_paths, self.RGBiso_paths,  self.grasp_paths = np.array(self.RGBobj_paths), np.array(self.RGBiso_paths), np.array(self.grasp_paths)
+      self.RGBobj_paths, self.RGBiso_paths, self.grasp_paths = self.RGBobj_paths[ind], self.RGBiso_paths[ind], self.grasp_paths[ind]
+      self.RGBobj_paths, self.RGBiso_paths, self.grasp_paths = list(self.RGBobj_paths), list(self.RGBiso_paths), list(self.grasp_paths)
 
 
   def __len__(self):
