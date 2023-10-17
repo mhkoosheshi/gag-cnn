@@ -51,7 +51,7 @@ def train_path_lists(mode='rgb', iso_num=1):
       return rgb_obj, d_iso, grasps
   
   elif iso_num==2:
-      return rgb_obj, rgb_iso2, rgb_iso3, grasps
+      return rgb_obj, rgb_iso, rgb_iso2, grasps
 
   elif iso_num==3:
       return rgb_obj, rgb_iso, rgb_iso2, rgb_iso3, grasps
